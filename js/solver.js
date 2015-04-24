@@ -5,6 +5,8 @@
 */
 (function() {
 
+    "use strict"
+
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     function Solver(grid) {
@@ -43,15 +45,15 @@
             collector = (collector || []);
             while (numSolved > 0) {
                 numSolved = collector.length;
-                for (var i = 0; i < unsolved.length; i++) {
-                    this._exclude(unsolved[i], collector);
+                for (let cell of unsolved) {
+                    this._exclude(cell, collector);
                 }
                 // did we manage any ?
                 numSolved = collector.length - numSolved;
             }
 
             if (!this.grid.isSolved()) {
-                var solvedCells = collector.length;
+                let solvedCells = collector.length;
                 this._findUniqueValuesInUnits(collector);
                 if (collector.length - solvedCells > 0) {
                     this.solve(collector);
@@ -71,24 +73,20 @@
                This is the process of looking at a cells subgrid, row and column and excluding from the
                 list 1..9 all numbers that are already in the subgrid, row and column (peers).
             */
-            if (cell.value !== 0) {
-                return [];
-            }
+            if (cell.value === 0) {
 
-            var valueFromPeers = this.grid.peers(cell).map(function(c) {
-                    return c.value;
-                }),
-                possibleValues = DIGITS.filter(function(d) {
-                    return valueFromPeers.indexOf(d) === -1;
-                });
+                let peers = this.grid.peers(cell),
+                    peerValues = peers.map(c => c.value),
+                    possibleValues = DIGITS.filter(d => peerValues.indexOf(d) === -1);
 
-            if (possibleValues.length === 1) {
-                cell.value = possibleValues[0];
-                collector.push(cell);
-            } else if (possibleValues.length > 0) {
-                cell.possibleValues = possibleValues;
-            } else {
-                throw 'Cell has no possible value [' + cell.row + ', ' + cell.col + ']';
+                if (possibleValues.length === 1) {
+                    cell.value = possibleValues[0];
+                    collector.push(cell);
+                } else if (possibleValues.length > 0) {
+                    cell.possibleValues = possibleValues;
+                } else {
+                    throw 'Cell has no possible value [' + cell.row + ', ' + cell.col + ']';
+                }
             }
         },
 
@@ -100,37 +98,29 @@
             */
             // get the sub grids
             var subGrids = [];
-            this.grid.subgrids().forEach(function(sg) {
+            this.grid.subgrids().forEach((sg) => {
                 subGrids.push([].concat.apply([], sg));
             });
-
-            [subGrids, this.grid.columns(), this.grid.rows].forEach(function(units) {
-                units.forEach(function(unit) {
-                    var unsolved = unit.filter(function(c) {
-                        return c.value === 0;
-                    });
+            
+            for (let units of [subGrids, this.grid.columns(), this.grid.rows]) {
+                for (let unit of units) {
+                    let unsolved = unit.filter(c => c.value === 0);
                     //console.log("Unsolved in the unit is ", unsolved.length)
-                    unsolved.forEach(function(unsolvedCell) {
+                    unsolved.forEach((unsolvedCell) => {
                         var unique,
                             otherCellsPossValues = unit
-                            .filter(function(c) {
-                                return c !== unsolvedCell;
-                            })
-                            .map(function(c) {
-                                return c.possibleValues;
-                            });
+                            .filter(c => c !== unsolvedCell)
+                            .map(c => c.possibleValues);
                         // flatten these...
                         otherCellsPossValues = [].concat.apply([], otherCellsPossValues);
-                        unique = unsolvedCell.possibleValues.filter(function(x) {
-                            return otherCellsPossValues.indexOf(x) === -1;
-                        });
+                        unique = unsolvedCell.possibleValues.filter(x => otherCellsPossValues.indexOf(x) === -1);
                         if (unique.length === 1) {
                             unsolvedCell.value = unique[0];
                             collector.push(unsolvedCell);
                         }
                     });
-                });
-            });
+                }
+            }
         },
 
         _search: function(collector) {
@@ -141,14 +131,12 @@
             */
 
             var cell = (this.grid.unsolved()
-                .sort(function(x, y) {
-                    return x.possibleValues.length - y.possibleValues.length;
-                }))[0];
+                        .sort((x, y) => x.possibleValues.length - y.possibleValues.length)[0]),
+                copied;
 
             var poss = cell.possibleValues;
-            for (var i = 0; i < poss.length; i++) {
-                var copied = collector.slice(),
-                    value = poss[i];
+            for (let value of poss) {
+                copied = collector.slice();
                 this.guesses += 1;
                 cell.value = value;
                 collector.push(cell);
@@ -162,13 +150,11 @@
                     // here's the back tracking part, we've ended up in a position where we
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.      
-                    collector.filter(function(x) {
-                            return copied.indexOf(x) === -1;
-                        })
-                        .forEach(function(undoMe) {
-                            undoMe.possibleValues = [];
-                            undoMe.value = 0;
-                        });
+                    collector.filter(x => copied.indexOf(x) === -1)
+                             .forEach(undoMe => {
+                                undoMe.possibleValues = [];
+                                undoMe.value = 0;
+                             });
                     collector = copied;
                 }
             }
