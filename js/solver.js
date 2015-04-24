@@ -138,7 +138,7 @@
                 This is the backtracking search.  The "collector" is used to implement the
                 backtracking, so that we can undo values that were set following a guess that leads to
                 a dead end.
-	        */
+            */
 
             var cell = (this.grid.unsolved()
                 .sort(function(x, y) {
