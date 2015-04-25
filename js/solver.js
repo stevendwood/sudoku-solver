@@ -9,10 +9,18 @@
 
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-    // The are a couple of useful map functions, pulling them up here
+    // These are a couple of useful map functions, pulling them up here
     // speeds things up.
     var valueOfCell = (cell => cell.value),
         possibleValuesOfCell = (cell => cell.possibleValues);
+
+    function undoCell(cell) {
+        // Sets the value of the cell to 0 and removes
+        // possible values, called during the backtracking
+        // search
+        cell.possibleValues = [];
+        cell.value = 0;
+    }
 
     function Solver(grid) {
         this.grid = grid;
@@ -150,18 +158,13 @@
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.      
                     collector.filter(x => copied.indexOf(x) === -1)
-                             .forEach(this._undo);
+                             .forEach(undoCell);
                     collector = copied;
                 }
             }
             // If we get here then we're also stuck since we haven't found a solution despite trying
             // all possible values for a cell.
             throw 'Tried all values for this cell  [' + cell.row + ', ' + cell.col + ']' + cell.possibleValues;
-        },
-
-        _undo: function(cell) {
-            cell.possibleValues = [];
-            cell.value = 0;
         }
     };
 
