@@ -132,12 +132,10 @@
                 backtracking, so that we can undo values that were set following a guess that leads to
                 a dead end.
             */
-            var cell = (this.grid.unsolved().sort((x, y) => x.possibleValues.length - y.possibleValues.length)[0]),
-                copied,
-                poss = cell.possibleValues;
+            var cell = (this.grid.unsolved().sort((x, y) => x.possibleValues.length - y.possibleValues.length)[0]);
 
-            for (let value of poss) {
-                copied = collector.slice();
+            for (let value of cell.possibleValues) {
+                let copied = collector.slice();
                 this.guesses += 1;
                 cell.value = value;
                 collector.push(cell);
