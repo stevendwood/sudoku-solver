@@ -1,11 +1,11 @@
 /****************************************************************
 
-	Solver...
+    Solver...
 
 */
 (function() {
 
-    "use strict"
+    "use strict";
 
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -54,7 +54,7 @@
                          .forEach(this._exclude.bind(this, collector));
                 // did we manage any ?
                 numSolved = collector.length - numSolved;
-            } while (numSolved > 0)
+            } while (numSolved > 0);
 
             if (!this.grid.isSolved()) {
                 let solvedCells = collector.length;
