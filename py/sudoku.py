@@ -22,7 +22,7 @@ with open('../test-puzzles.txt') as f:
         solver = Solver(grid)
         start = time.time()
         try:
-            solved_cells = solver.solve()
+            solver.solve()
         except ValueError as inconsistency:
             print("Couldn't solve it")
             print(grid)
