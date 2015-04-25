@@ -14,6 +14,11 @@
     var valueOfCell = (cell => cell.value),
         possibleValuesOfCell = (cell => cell.possibleValues);
 
+    function isUnsolved(cell) {
+        // a filter function to weed out unsolved cells.
+        return cell.value === 0;
+    }
+
     function undoCell(cell) {
         // Sets the value of the cell to 0 and removes
         // possible values, called during the backtracking
@@ -115,7 +120,7 @@
             
             for (let units of [subGrids, this.grid.columns(), this.grid.rows]) {
                 for (let unit of units) {
-                    let unsolved = unit.filter(c => c.value === 0);
+                    let unsolved = unit.filter(isUnsolved);
                     //console.log("Unsolved in the unit is ", unsolved.length)
                     unsolved.forEach((unsolvedCell) => {
                         var unique,
