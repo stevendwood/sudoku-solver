@@ -9,6 +9,11 @@
 
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+    // The are a couple of useful map functions, pulling them up here
+    // speeds things up.
+    var valueOfCell = (cell => cell.value),
+        possibleValuesOfCell = (cell => cell.possibleValues);
+
     function Solver(grid) {
         this.grid = grid;
         this.guesses = 0;
@@ -39,18 +44,17 @@
                 Because this method is called recursively
                 we collect all the cells we solve in the list supplied.
             */
-            var numSolved = 1,
-                unsolved = this.grid.unsolved();
+            var numSolved = 0;
 
             collector = (collector || []);
-            while (numSolved > 0) {
+
+            do {
                 numSolved = collector.length;
-                for (let cell of unsolved) {
-                    this._exclude(cell, collector);
-                }
+                this.grid.unsolved()
+                         .forEach(this._exclude.bind(this, collector));
                 // did we manage any ?
                 numSolved = collector.length - numSolved;
-            }
+            } while (numSolved > 0)
 
             if (!this.grid.isSolved()) {
                 let solvedCells = collector.length;
@@ -65,18 +69,17 @@
             }
 
             return collector;
-
         },
 
-        _exclude: function(cell, collector) {
+        _exclude: function(collector, cell) {
             /*
                This is the process of looking at a cells subgrid, row and column and excluding from the
                 list 1..9 all numbers that are already in the subgrid, row and column (peers).
             */
-            if (cell.value === 0) {
 
+            if (cell.value === 0) {
                 let peers = this.grid.peers(cell),
-                    peerValues = peers.map(c => c.value),
+                    peerValues = peers.map(valueOfCell),
                     possibleValues = DIGITS.filter(d => peerValues.indexOf(d) === -1);
 
                 if (possibleValues.length === 1) {
@@ -109,8 +112,8 @@
                     unsolved.forEach((unsolvedCell) => {
                         var unique,
                             otherCellsPossValues = unit
-                            .filter(c => c !== unsolvedCell)
-                            .map(c => c.possibleValues);
+                                    .filter(c => c !== unsolvedCell)
+                                    .map(possibleValuesOfCell);
                         // flatten these...
                         otherCellsPossValues = [].concat.apply([], otherCellsPossValues);
                         unique = unsolvedCell.possibleValues.filter(x => otherCellsPossValues.indexOf(x) === -1);
@@ -129,12 +132,10 @@
                 backtracking, so that we can undo values that were set following a guess that leads to
                 a dead end.
             */
+            var cell = (this.grid.unsolved().sort((x, y) => x.possibleValues.length - y.possibleValues.length)[0]),
+                copied,
+                poss = cell.possibleValues;
 
-            var cell = (this.grid.unsolved()
-                        .sort((x, y) => x.possibleValues.length - y.possibleValues.length)[0]),
-                copied;
-
-            var poss = cell.possibleValues;
             for (let value of poss) {
                 copied = collector.slice();
                 this.guesses += 1;
@@ -151,16 +152,18 @@
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.      
                     collector.filter(x => copied.indexOf(x) === -1)
-                             .forEach(undoMe => {
-                                undoMe.possibleValues = [];
-                                undoMe.value = 0;
-                             });
+                             .forEach(this._undo);
                     collector = copied;
                 }
             }
             // If we get here then we're also stuck since we haven't found a solution despite trying
             // all possible values for a cell.
             throw 'Tried all values for this cell  [' + cell.row + ', ' + cell.col + ']' + cell.possibleValues;
+        },
+
+        _undo: function(cell) {
+            cell.possibleValues = [];
+            cell.value = 0;
         }
     };
 

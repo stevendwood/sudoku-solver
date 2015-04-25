@@ -44,14 +44,16 @@
     	},
 
     	subgrids: function() {
-    		var grids = [];
-    		for (let i=0; i<9; i+=3) {
-       			for (let j=0; j<9; j+=3) {
-       				grids.push(this.sameSubGridAs(new Cell(i, j)));
-       			}
-       		}
+            if (!this.grids) {
+        		this.grids = [];
+        		for (let i=0; i<9; i+=3) {
+           			for (let j=0; j<9; j+=3) {
+           				this.grids.push(this.sameSubGridAs(new Cell(i, j)));
+           			}
+           		}
+            }
 
-       		return grids;
+       		return this.grids;
        	},
     	
 
@@ -142,8 +144,8 @@
     	},
 
     	isSolved: function() {
-    		for (var i=0; i<this.rows.length; i++) {
-    			for (var col=0; col<9; col++) {
+    		for (let i=0; i<this.rows.length; i++) {
+    			for (let col=0; col<9; col++) {
     				if ((this.rows[i][col]).value === 0) {
     					return false;
     				} 
@@ -169,11 +171,15 @@
                 . x . | . . . | . . .
                 . x . | . . . | . . .
             */
-            return this.sameColAs(cell)
-            		.concat(this.sameRowAs(cell))
-            		// need to flatten the sub grids as it's an [[]]
-            		.concat([].concat.apply([], this.sameSubGridAs(cell)))
-            		.filter(x => x !== cell);
+            if (!cell.peers) {
+                cell.peers = this.sameColAs(cell)
+            		     .concat(this.sameRowAs(cell))
+            		     // need to flatten the sub grids as it's an [[]]
+            		     .concat([].concat.apply([], this.sameSubGridAs(cell)))
+            		     .filter(x => x !== cell);
+            }
+
+            return cell.peers;
         }
     };
 
