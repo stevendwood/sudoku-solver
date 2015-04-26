@@ -91,8 +91,7 @@
             */
 
             if (cell.value === 0) {
-                let peers = this.grid.peers(cell),
-                    peerValues = peers.map(valueOfCell),
+                let peerValues = this.grid.peers(cell).map(valueOfCell),
                     possibleValues = DIGITS.filter(d => peerValues.indexOf(d) === -1);
 
                 if (possibleValues.length === 1) {
