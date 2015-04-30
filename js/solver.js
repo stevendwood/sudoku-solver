@@ -59,21 +59,17 @@
                 // we need to unwind
                 let numSolved = this._solvedCells.length;
                 this.guesses += 1;
-                let copied = this._solvedCells;
 
                 try {
                     this._setValueForCell(cell, value);
-                    if (this.grid.isSolved()) {
-                        // wahey !!
-                        return;
-                    } else {
+                    if (!this.grid.isSolved()) {
+                        // no luck, keep looking...
                         this._search();                      
                     }
                 } catch (inconsistency) {
                     // here's the back tracking part, we've ended up in a position where we
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.   
-                    //console.log("Unsolved ", this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved));
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
                                      .forEach(undoCell);
 
@@ -83,7 +79,7 @@
             if (!this.grid.isSolved()) {
                 // If we get here then we're also stuck since we haven't found a solution despite trying
                 // all possible values for a cell.
-                throw 'Tried all values for this cell  [' + cell.row + ', ' + cell.col + ']' + cell.possibleValues;
+                throw "Tried all values for this cell  [" + cell.row + ", " + cell.col + "]" + cell.possibleValues;
             }
         }
 
@@ -129,7 +125,7 @@
 
         _findCellsWithOnePossibleValue(cells) {
             cells = (cells || this.grid.unsolved());
-            cells.forEach((cell) => {
+            cells.forEach(cell => {
                 if (cell.value === 0 && cell.possibleValues.length === 1) {
                     this._setValueForCell(cell, cell.possibleValues[0]);
                 }

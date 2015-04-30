@@ -22,12 +22,12 @@
 			start = Date.now();
 			
 			solver.solve();
-			
-			totalTime += Date.now() - start;
+			let time =  Date.now() - start;
+			totalTime += time
 			totalGuesses += solver.guesses;
 			if (g.isSolved()) {
 				console.log(g.toString());
-				console.log("solved in "+(Date.now() - start)+" with "+solver.guesses +" guesses.");
+				console.log("solved in "+(time)+" with "+solver.guesses +" guesses.");
 			} else {
 				console.log("Couldn't solve it.");
 				console.log(g.toString());
