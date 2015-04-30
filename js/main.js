@@ -27,7 +27,7 @@
 			totalGuesses += solver.guesses;
 			if (g.isSolved()) {
 				console.log(g.toString());
-				console.log("solved in "+(time)+" with "+solver.guesses +" guesses.");
+				console.log("solved in "+(time)+"ms with "+solver.guesses +" guesses.");
 			} else {
 				console.log("Couldn't solve it.");
 				console.log(g.toString());
@@ -35,7 +35,7 @@
 			console.log("\n");
 		});
 
-		console.log("Solved in avg "+totalTime / puzzleCount);
+		console.log("Solved in avg "+Math.round(totalTime / puzzleCount)+" ms.");
 		console.log("Had to make "+totalGuesses+ " guesses");
 	});
 }());

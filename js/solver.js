@@ -23,11 +23,6 @@
         return cell.value === 0;
     }
 
-    function undoCell(cell) {
-        // Sets the value of the cell to 0
-        cell.value = 0;
-    }
-
     class Solver {
 
         constructor(grid) {
@@ -71,7 +66,7 @@
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.   
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
-                                     .forEach(undoCell);
+                                     .forEach(cell => cell.value = 0);
 
                     this._initPossibleValues();
                 }
