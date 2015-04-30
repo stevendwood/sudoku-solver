@@ -59,6 +59,7 @@
                 // we need to unwind
                 let numSolved = this._solvedCells.length;
                 this.guesses += 1;
+                let copied = this._solvedCells;
 
                 try {
                     this._setValueForCell(cell, value);
@@ -72,9 +73,9 @@
                     // here's the back tracking part, we've ended up in a position where we
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.   
+                    //console.log("Unsolved ", this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved));
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
                                      .forEach(undoCell);
-
 
                     this._initPossibleValues();
                 }
@@ -113,10 +114,16 @@
         }
 
         _setValueForCell(cell, value) {
+            var peers = this.grid.peers(cell);
+           
+            if (peers.some(x => x.value === value)) {
+                throw "Tried to set a value that already exists in peers";
+            }
+            
             cell.value = value;
             this._solvedCells.push(cell);
             this._removeValueFromPeers(cell);
-            this._findCellsWithOnePossibleValue(this.grid.peers(cell));
+            this._findCellsWithOnePossibleValue(peers);
             this._findUniqueValuesInUnits(cell);
         }
 
