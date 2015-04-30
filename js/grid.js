@@ -6,22 +6,22 @@
 
     var Cell = require("./cell");
 
-    function Grid(input) {
-        var currentRow;
-        this.rows = [];
-      
-    	for (var idx=0; idx<input.length; idx++) {
-    		if (idx % 9 === 0) {
-    			currentRow = [];
-    			this.rows.push(currentRow);
-    		}
+    class Grid {
+        constructor(input) {
+            var currentRow;
+            this.rows = [];
+          
+        	for (var idx=0; idx<input.length; idx++) {
+        		if (idx % 9 === 0) {
+        			currentRow = [];
+        			this.rows.push(currentRow);
+        		}
 
-    		currentRow.push(new Cell(this.rows.length-1, currentRow.length, input[idx]));
-    	}
-    }
+        		currentRow.push(new Cell(this.rows.length-1, currentRow.length, input[idx]));
+        	}
+        }
 
-    Grid.prototype = {
-    	toString: function() {
+    	toString() {
     		var output = "";
     		for (let i=0; i<this.rows.length; i++) {
     			if (i !== 0 && i % 3 === 0) {
@@ -41,9 +41,9 @@
     		}
 
     		return output;
-    	},
+    	}
 
-    	subgrids: function() {
+    	subgrids() {
             if (!this.grids) {
         		this.grids = [];
         		for (let i=0; i<9; i+=3) {
@@ -54,10 +54,9 @@
             }
 
        		return this.grids;
-       	},
+       	}
     	
-
-    	columns: function() {
+    	columns() {
     		var columns = [];
     		for (let i=0; i<9; i++) {
     			columns.push([]);
@@ -69,22 +68,22 @@
     		});
 
     		return columns;
-    	},
+    	}
 
-    	sameRowAs: function(cell) {
+    	sameRowAs(cell) {
     		return this.rows[cell.row];
-    	},
+    	}
 
-    	sameColAs: function(cell) {
+    	sameColAs(cell) {
     		var column = [];
     		this.rows.forEach(function(r) { 
     			column.push(r[cell.col]);
     		});
 
     		return column;
-    	},
+    	}
 
-    	sameSubGridAs: function(cell) {
+    	sameSubGridAs(cell) {
 
             /*
                 Get all the cells in the same "sub grid" as the given cell. e.g.
@@ -132,18 +131,18 @@
             }
 
             return subGrid;
-    	},
+    	}
 
-    	unsolved: function() {
+    	unsolved() {
     		var unsolved = [];
     		this.rows.forEach(function(row) {
     			unsolved = unsolved.concat(row.filter(function(c) { return c.value === 0; }));
     		});
 
     		return unsolved;
-    	},
+    	}
 
-    	isSolved: function() {
+    	isSolved() {
     		for (let i=0; i<this.rows.length; i++) {
     			for (let col=0; col<9; col++) {
     				if ((this.rows[i][col]).value === 0) {
@@ -152,9 +151,9 @@
     			}
     		}
     		return true;
-    	},
+    	}
 
-    	peers: function(cell) {
+    	peers(cell) {
             /*
                 Get the peers for the cell.  The peers for the cell "c" are pictorially
                 represented below by the cells marked "x"
@@ -181,7 +180,7 @@
 
             return cell.peers;
         }
-    };
+    }
 
     module.exports = Grid;
 }());

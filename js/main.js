@@ -5,13 +5,13 @@
 	var Grid = require("./grid");
 	var Solver = require("./solver");
 
-	fs.readFile("../test-puzzles.txt", "utf-8", function(error, data) {
+	fs.readFile("../hard-puzzles.txt", "utf-8", function(error, data) {
 		var puzzles = data.split("\n"),
 			totalTime = 0,
 			puzzleCount = 0,
 			totalGuesses = 0;
 
-		puzzles.forEach(function(puzzle) {
+		puzzles.forEach(puzzle => {
 			puzzleCount++;
 
 			var g = new Grid(puzzle.trim()),
@@ -20,7 +20,9 @@
 
 			console.log(g.toString());
 			start = Date.now();
+			
 			solver.solve();
+			
 			totalTime += Date.now() - start;
 			totalGuesses += solver.guesses;
 			if (g.isSolved()) {
@@ -28,6 +30,7 @@
 				console.log("solved in "+(Date.now() - start)+" with "+solver.guesses +" guesses.");
 			} else {
 				console.log("Couldn't solve it.");
+				console.log(g.toString());
 			}
 			console.log("\n");
 		});

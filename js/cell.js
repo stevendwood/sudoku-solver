@@ -4,22 +4,29 @@
 
 
 */
+(function() {
 
-function Cell(row, col, value) {
-	this.value = value || 0;
-	this.row = row;
-	this.col = col;
-	if (value == '.') {
-         this.value = 0;
-     } else {
-     	this.value = parseInt(value, 10);
-     }
+	"use strict";
 
-     this.possibleValues = [];
-}
+	class Cell {
 
-Cell.prototype.toString = function() {
-	return this.value || "-";
-}
+		constructor(row, col, value) {
+			this.value = value || 0;
+			this.row = row;
+			this.col = col;
+			if (value == '.') {
+	        	this.value = 0;
+	     	} else {
+	     		this.value = parseInt(value, 10);
+	     	}
 
-module.exports = Cell
+	     	this.possibleValues = [];
+		}
+
+		toString() {
+			return this.value || "-";
+		}
+	}
+
+	module.exports = Cell;
+} ());
