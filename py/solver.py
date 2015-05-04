@@ -31,16 +31,17 @@ class Solver(object):
 
     def init_possible_values(self):
         for cell in self.grid.unsolved():
-            value_from_peers = [x.value for x in self.grid.peers(cell)]
+            peers = self.grid.peers(cell)
+            value_from_peers = [x.value for x in peers]
             cell.possible_values = [x for x in range(1, 10) if x not in value_from_peers]
             
     def find_cells_with_one_possible_value(self, cells):
-        for cell in [c for c in cells if c.value is 0 and len(c.possible_values) is 1]:
-            #print("Solved one "+str(cell.possible_values))
-            self.set_value_for_cell(cell, cell.possible_values[0])
+        for cell in cells:
+            if cell.value == 0 and len(cell.possible_values) == 1:
+                self.set_value_for_cell(cell, cell.possible_values[0])
 
     def find_unique_possibility_in_unit(self, unit):
-        for unsolved_cell in [cell for cell in unit if cell.value is 0]:
+        for unsolved_cell in [cell for cell in unit if cell.value == 0]:
             all_other_vals = [x.possible_values for x in unit if x is not unsolved_cell]
             # all_other_vals is an [[]] where each element is the set of possible values
             # for a cell in the unit.
@@ -48,15 +49,12 @@ class Solver(object):
             # now it's a flat list so we can easily check if there any values in the cell
             # we're considering that are not in any other cells possibles values...
             found = [x for x in unsolved_cell.possible_values if x not in all_other_vals]
-            if len(found) is 1:
-                #print("Found unique 1")
+            if len(found) == 1:
                 self.set_value_for_cell(unsolved_cell, found[0])
 
     def find_unique_values_in_units(self, cell=None):
             if cell is not None:
                 sg = self.grid.same_sub_grid_as(cell)
-                #print('sublist is '+str(sg))
-                #sg = [item for sublist in sg for item in sublist]
                 for unit in [sg, self.grid.same_col_as(cell), self.grid.same_row_as(cell)]:
                     self.find_unique_possibility_in_unit(unit)  
             else:
@@ -76,10 +74,10 @@ class Solver(object):
         self.find_unique_values_in_units(cell)
 
     def remove_value_from_peers(self, cell):  
-        for p in (peer for peer in self.grid.peers(cell) if peer.value is 0):
+        for p in (peer for peer in self.grid.peers(cell) if peer.value == 0):
             if cell.value in p.possible_values:
                 p.possible_values.remove(cell.value)
-            if len(p.possible_values) is 0:
+            if len(p.possible_values) == 0:
                 raise ValueError("No possible value [" + str(p.row) + ", " + str(p.col) + "]")
 
     def _search(self):

@@ -110,33 +110,35 @@
 
             // col:
             // same as above
+            if (!cell.subgrid) {
+                let index = function(x) {
+                	if (x <= 2) { return 0; }
+                	else if (x <= 5) { return 3; }
+                	else { return 6; }
+                };
 
-            var index = function(x) {
-            	if (x <= 2) { return 0; }
-            	else if (x <= 5) { return 3; }
-            	else { return 6; }
-            };
+                let startRow = index(cell.row),
+                	startCol = index(cell.col),
+                	subgrid = [];
+                for (let i=startRow; i<startRow+3; i++) {
+                	let row = this.rows[i],
+                		subGridRow = [];
+                	for (let j=startCol; j<startCol+3; j++) {
+                		subGridRow.push(row[j]);
+                	}
 
-            var startRow = index(cell.row),
-            	startCol = index(cell.col),
-            	subGrid = [];
-            for (var i=startRow; i<startRow+3; i++) {
-            	var row = this.rows[i],
-            		subGridRow = [];
-            	for (var j=startCol; j<startCol+3; j++) {
-            		subGridRow.push(row[j]);
-            	}
-
-            	subGrid.push(subGridRow);
+                	subgrid.push(subGridRow);
+                }
+                cell.subgrid = subgrid;
             }
 
-            return subGrid;
+            return cell.subgrid;
     	}
 
     	unsolved() {
     		var unsolved = [];
-    		this.rows.forEach(function(row) {
-    			unsolved = unsolved.concat(row.filter(function(c) { return c.value === 0; }));
+    		this.rows.forEach(row => {
+    			unsolved = unsolved.concat(row.filter(c => c.value === 0));
     		});
 
     		return unsolved;

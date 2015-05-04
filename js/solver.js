@@ -47,7 +47,6 @@
 
         _search() {
             // pick the cell with least possible values (more chance of guessing correctly)
-            //len(c.possible_values) * 100 + (c.row + c.col)
             var cell = (this.grid.unsolved().sort((x, y) => {
                 var xVal = x.possibleValues.length * 100 + (x.row + x.col),
                     yVal = y.possibleValues.length * 100 + (y.row + y.col);

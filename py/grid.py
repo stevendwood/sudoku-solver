@@ -134,7 +134,7 @@ class Grid(object):
     def is_solved(self):
         for row in self.rows:
             for cell in row:
-                if cell.value is 0:
+                if cell.value == 0:
                     return False
         return True
 
@@ -145,7 +145,7 @@ class Grid(object):
         unsolved = []
         for row in self.rows:
             for cell in row:
-                if cell.value is 0:
+                if cell.value == 0:
                     unsolved.append(cell)
         return unsolved
 
@@ -157,11 +157,11 @@ class Grid(object):
         for row in range(9):
             output += '\n'
 
-            if row is not 0 and row % 3 is 0:
+            if row is not 0 and row % 3 == 0:
                 output += '---------+---------+---------\n'
             for col in range(9):
                 cell = self.rows[row][col]
-                if col is not 0 and col % 3 is 0:
+                if col is not 0 and col % 3 == 0:
                     output += '|'
                 output += ' ' + str(cell) + ' '
 
@@ -187,7 +187,7 @@ class Cell(object):
         return self.__str__()
 
     def __str__(self):
-        if self.value is 0:
+        if self.value == 0:
             return '-'
         else:
             return str(self.value)
