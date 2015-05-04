@@ -106,17 +106,3 @@ class Solver(object):
             found = [x for x in unsolved_cell.possible_values if x not in all_other_vals]
             if len(found) == 1:
                 self.set_value_for_cell(unsolved_cell, found[0])
-                                
-
-
-    
-            
-        
-        
-
-
-
-            
-
-   
-   
