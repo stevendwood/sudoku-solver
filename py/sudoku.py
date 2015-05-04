@@ -14,7 +14,7 @@ from solver import Solver
 total_time, total_guesses, puzzle_count = 0, 0, 0
 # ooh this is a nice feature of python, if your object implements
 # __enter__ and __exit__ the you can use with rather than try: finally
-with open('../test-puzzles.txt') as f:
+with open('../hard-puzzles.txt') as f:
     puzzles = f.readlines()
     for puzzle in puzzles:
         puzzle_count += 1
@@ -23,12 +23,17 @@ with open('../test-puzzles.txt') as f:
         start = time.time()
         try:
             solver.solve()
+            print(grid)
+            took = time.time() - start
+            print("solved in "+str(took)+" with "+str(solver.guesses)+" guesses.")
+            total_time += took
+            total_guesses += solver.guesses 
         except ValueError as inconsistency:
             print("Couldn't solve it")
+            print(inconsistency)
             print(grid)
-        print("solved in "+str(time.time() - start)+" with "+str(solver.guesses)+" guesses.")
-        total_time += time.time() - start
-        total_guesses += solver.guesses 
-        print(grid)
+
+
+       
 print("Solved in avg "+str(total_time / puzzle_count))
 print("Had to make "+str(total_guesses)+ " guesses")

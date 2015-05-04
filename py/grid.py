@@ -20,17 +20,14 @@ class Grid(object):
     '''
     def __init__(self, input_str):
         self.rows = []
+        self._sub_grids = None
         self._sub_grid_dict = {} # cache the sub grid a cell is in
-        self._peers_map = {} # cache the peers of a given cell
         for row_idx in range(0, len(input_str), 9):
             row = input_str[row_idx:row_idx+9]
             current_row = []
             for col in range(9):
                 current_row.append(Cell(len(self.rows), col, row[col]))
             self.rows.append(current_row)
-
-    def __iter__(self):
-        return GridIterator(self)
 
     def peers(self, cell):
         '''
@@ -49,12 +46,12 @@ class Grid(object):
             . x . | . . . | . . .
             . x . | . . . | . . .
         '''
-        cell_id = id(cell)
-        if cell_id not in self._peers_map:
-            self._peers_map[cell_id] = [x for x in self.same_sub_grid_as(cell) +
+        
+        if cell.peers is None:
+            cell.peers = [x for x in self.same_sub_grid_as(cell) +
                                         self.same_col_as(cell) + 
                                         self.same_row_as(cell) if x is not cell]
-        return self._peers_map[cell_id]
+        return cell.peers
 
     def columns(self):
         '''
@@ -63,6 +60,13 @@ class Grid(object):
             in column 2 etc.
         '''
         return [[row[col] for row in self.rows] for col in range(9)]
+
+    def subgrids(self):
+        if self._sub_grids is None:
+            self._sub_grids = [self.same_sub_grid_as(Cell(x, y))
+                     for y in range(0, 9, 3)
+                     for x in range(0, 9, 3)]
+        return self._sub_grids
 
     def same_row_as(self, cell):
         '''
@@ -128,16 +132,22 @@ class Grid(object):
         return sub_grid
     
     def is_solved(self):
-        for cell in self:
-            if cell.value is 0:
-                return False
+        for row in self.rows:
+            for cell in row:
+                if cell.value is 0:
+                    return False
         return True
 
     def unsolved(self):
         '''
             Get all the cells in this Grid that are unsolved
         '''
-        return [cell for cell in self if cell.value is 0]
+        unsolved = []
+        for row in self.rows:
+            for cell in row:
+                if cell.value is 0:
+                    unsolved.append(cell)
+        return unsolved
 
     def __str__(self):
         '''
@@ -157,27 +167,6 @@ class Grid(object):
 
         return output
 
-class GridIterator(object):
-    '''
-        I just did this pretty much to learn a bit about writing
-        an iterable object.
-    '''
-    def __init__(self, grid):
-        self.grid = grid
-        self.counter = 0
-
-    # python < 3 requires next instead of __next__
-    def __next__(self):
-        if self.counter is 81:
-            raise StopIteration
-
-        row = math.floor(self.counter / 9)
-        col = self.counter % 9
-
-        cell = self.grid.rows[row][col]
-        self.counter += 1
-        return cell
-
 class Cell(object):
     '''
         Represents a single cell of the puzzle.  Is used to
@@ -192,6 +181,7 @@ class Cell(object):
             value = 0
         self.value = int(value)
         self.possible_values = []
+        self.peers = None
 
     def __repr__(self):
         return self.__str__()
