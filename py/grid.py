@@ -142,12 +142,7 @@ class Grid(object):
         '''
             Get all the cells in this Grid that are unsolved
         '''
-        unsolved = []
-        for row in self.rows:
-            for cell in row:
-                if cell.value == 0:
-                    unsolved.append(cell)
-        return unsolved
+        return [cell for row in self.rows for cell in row if cell.value == 0]
 
     def __str__(self):
         '''

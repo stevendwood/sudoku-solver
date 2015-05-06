@@ -70,10 +70,15 @@
                     // here's the back tracking part, we've ended up in a position where we
                     // can't progress, so before we try another value, undo all the values
                     // we set since the last guess.   
+                    let resetPossibilities = [];   
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
-                                     .forEach(cell => cell.value = 0);
+                                     .forEach(cell => { 
+                                        cell.value = 0;
+                                        resetPossibilities.push(cell);
+                                        resetPossibilities = resetPossibilities.concat(this.grid.peers(cell));
+                                     }, this);
 
-                    this._initPossibleValues();
+                    this._initPossibleValues(new Set(resetPossibilities.filter(isUnsolved)));
                 }
             }
             if (!this.grid.isSolved()) {
@@ -83,8 +88,8 @@
             }
         }
 
-        _initPossibleValues() {
-            this.grid.unsolved().forEach((cell) => {
+        _initPossibleValues(cells) {
+            (cells || this.grid.unsolved()).forEach((cell) => {
                 let peerValues = this.grid.peers(cell).map(valueOfCell),
                     possibleValues = DIGITS.filter(d => peerValues.indexOf(d) === -1);
                     cell.possibleValues = possibleValues;

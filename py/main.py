@@ -20,12 +20,12 @@ with open('../hard-puzzles.txt') as f:
         puzzle_count += 1
         grid = Grid(puzzle.strip('\n'))
         solver = Solver(grid)
-        start = time.time()
+        start = time.time() * 1000
         try:
             solver.solve()
             print(grid)
-            took = time.time() - start
-            print("solved in "+str(took)+" with "+str(solver.guesses)+" guesses.")
+            took = round(time.time() * 1000 - start)
+            print("solved in "+str(took)+"ms with "+str(solver.guesses)+" guesses.")
             total_time += took
             total_guesses += solver.guesses 
         except ValueError as inconsistency:
@@ -35,5 +35,5 @@ with open('../hard-puzzles.txt') as f:
 
 
        
-print("Solved in avg "+str(total_time / puzzle_count))
+print("Solved in avg "+str(round(total_time / puzzle_count)) + "ms.")
 print("Had to make "+str(total_guesses)+ " guesses")

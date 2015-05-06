@@ -46,18 +46,23 @@ class Solver(object):
                 # can't progress, so before we try another value, undo all the values
                 # we set since the last guess.   
                 solved_since_last_guess = self._solved_cells[num_solved:]
+                reset = []
                 for c in solved_since_last_guess:
                     c.value = 0
+                    reset += [c] + self.grid.peers(c)
+                self.init_possible_values([x for x in set(reset) if x.value == 0])
                 self._solved_cells = self._solved_cells[:num_solved]
-                self.init_possible_values()
 
         if not self.grid.is_solved():
             # If we get here then we're also stuck since we haven't found a solution despite trying
             # all possible values for a cell.
             raise ValueError("Tried all values for this cell  [" + str(cell.row) + ", " + str(cell.col) + "]" + str(cell.possible_values))
 
-    def init_possible_values(self):
-        for cell in self.grid.unsolved():
+    def init_possible_values(self, cells=None):
+        if cells is None:
+            cells = self.grid.unsolved()
+
+        for cell in cells:
             peers = self.grid.peers(cell)
             value_from_peers = [x.value for x in peers]
             cell.possible_values = [x for x in range(1, 10) if x not in value_from_peers]
@@ -82,9 +87,9 @@ class Solver(object):
         self.find_unique_values_in_units(cell)
             
     def find_cells_with_one_possible_value(self, cells):
-        for cell in cells:
-            if cell.value == 0 and len(cell.possible_values) == 1:
-                self.set_value_for_cell(cell, cell.possible_values[0])
+        # comprehension with side-effects instead of for loop...
+        [self.set_value_for_cell(cell, cell.possible_values[0]) 
+         for cell in cells if cell.value == 0 and len(cell.possible_values) == 1]
 
     def find_unique_values_in_units(self, cell=None):
             if cell is not None:
