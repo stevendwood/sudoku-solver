@@ -20,11 +20,12 @@ with open('../hard-puzzles.txt') as f:
         puzzle_count += 1
         grid = Grid(puzzle.strip('\n'))
         solver = Solver(grid)
+        print(grid)
         start = time.time() * 1000
         try:
             solver.solve()
-            print(grid)
             took = round(time.time() * 1000 - start)
+            print(str(grid) +"\n")
             print("solved in "+str(took)+"ms with "+str(solver.guesses)+" guesses.")
             total_time += took
             total_guesses += solver.guesses 

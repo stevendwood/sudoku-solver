@@ -31,27 +31,32 @@ class Solver(object):
 
     def _search(self):      
         cell = sorted(self.grid.unsolved(), key=lambda c: len(c.possible_values) * 100 + (c.row + c.col))[0]
-        for value in cell.possible_values:
+        num_possibilities = len(cell.possible_values)
+        for idx, value in enumerate(cell.possible_values):
             num_solved = len(self._solved_cells)
             self.guesses += 1;
 
             try:
-                self.set_value_for_cell(cell, value);
+                self.set_value_for_cell(cell, value)
                 if not self.grid.is_solved():
                     # no luck, keep looking...
-                    self._search()              
+                    self._search()
                 
             except ValueError as inconsistency:
-                # here's the back tracking part, we've ended up in a position where we
+                # we've ended up in a position where we
                 # can't progress, so before we try another value, undo all the values
-                # we set since the last guess.   
-                solved_since_last_guess = self._solved_cells[num_solved:]
-                reset = []
-                for c in solved_since_last_guess:
-                    c.value = 0
-                    reset += [c] + self.grid.peers(c)
-                self.init_possible_values([x for x in set(reset) if x.value == 0])
-                self._solved_cells = self._solved_cells[:num_solved]
+                # we set since the last guess.
+                if idx != (num_possibilities -1):
+                    # get the cells that we provided a value for before we got stuck
+                    solved_since_last_guess = self._solved_cells[num_solved:]
+                    reset = []
+                    for c in solved_since_last_guess:
+                        c.value = 0
+                        reset += [c] + self.grid.peers(c)
+                    # need to provide a new set of possible values for all those cells
+                    # that are affected by the incorrect guess.
+                    self.init_possible_values([x for x in set(reset) if x.value == 0])
+                    self._solved_cells = self._solved_cells[:num_solved]
 
         if not self.grid.is_solved():
             # If we get here then we're also stuck since we haven't found a solution despite trying
@@ -64,8 +69,8 @@ class Solver(object):
 
         for cell in cells:
             peers = self.grid.peers(cell)
-            value_from_peers = [x.value for x in peers]
-            cell.possible_values = [x for x in range(1, 10) if x not in value_from_peers]
+            value_from_peers = [x.value for x in peers if x.value != 0]
+            cell.possible_values = [x for x in range(1, 10) if x not in value_from_peers] 
 
     def remove_value_from_peers(self, cell):  
         for p in (peer for peer in self.grid.peers(cell) if peer.value == 0):
@@ -76,10 +81,10 @@ class Solver(object):
 
     def set_value_for_cell(self, cell, value):
         peers = self.grid.peers(cell);
-           
+        
         if any(x.value is value for x in peers):
             raise ValueError('Tried to set value that already exists in peers')
-          
+        
         cell.value = value
         self._solved_cells.append(cell)
         self.remove_value_from_peers(cell)
@@ -92,13 +97,13 @@ class Solver(object):
          for cell in cells if cell.value == 0 and len(cell.possible_values) == 1]
 
     def find_unique_values_in_units(self, cell=None):
-            if cell is not None:
-                sg = self.grid.same_sub_grid_as(cell)
-                for unit in [sg, self.grid.same_col_as(cell), self.grid.same_row_as(cell)]:
-                    self.find_unique_possibility_in_unit(unit)  
-            else:
-                for unit in [x for l in [self.grid.rows, self.grid.columns(), self.grid.subgrids()] for x in l]:
-                    self.find_unique_possibility_in_unit(unit)
+        if cell is not None:
+            sg = self.grid.same_sub_grid_as(cell)
+            for unit in [sg, self.grid.same_col_as(cell), self.grid.same_row_as(cell)]:
+                self.find_unique_possibility_in_unit(unit)  
+        else:
+            for unit in [x for l in [self.grid.rows, self.grid.columns(), self.grid.subgrids()] for x in l]:
+                self.find_unique_possibility_in_unit(unit)
 
     def find_unique_possibility_in_unit(self, unit):
         for unsolved_cell in [cell for cell in unit if cell.value == 0]:
