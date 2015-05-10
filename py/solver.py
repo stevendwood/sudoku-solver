@@ -5,8 +5,9 @@
     solver = Solver(g)
     solver.solve()
 '''
-
 from grid import Cell
+
+DIGITS = set(x for x in range(1, 10))
 
 class Solver(object):
     '''
@@ -15,7 +16,7 @@ class Solver(object):
     def __init__(self, grid):
         self.grid = grid
         self.guesses = 0
-        self._solved_cells = [];
+        self._solved_cells = []
 
     def solve(self):
         # work out what the set of possible values is for each unsolve cell.
@@ -30,18 +31,16 @@ class Solver(object):
             self._search();
 
     def _search(self):      
-        cell = sorted(self.grid.unsolved(), key=lambda c: len(c.possible_values) * 100 + (c.row + c.col))[0]
+        cell = min(self.grid.unsolved(), key=lambda c: len(c.possible_values) * 100 + (c.row + c.col))
         num_possibilities = len(cell.possible_values)
         for idx, value in enumerate(cell.possible_values):
             num_solved = len(self._solved_cells)
             self.guesses += 1;
-
             try:
                 self.set_value_for_cell(cell, value)
                 if not self.grid.is_solved():
                     # no luck, keep looking...
                     self._search()
-                
             except ValueError as inconsistency:
                 # we've ended up in a position where we
                 # can't progress, so before we try another value, undo all the values
@@ -66,21 +65,19 @@ class Solver(object):
     def init_possible_values(self, cells=None):
         if cells is None:
             cells = self.grid.unsolved()
-
         for cell in cells:
-            peers = self.grid.peers(cell)
-            value_from_peers = [x.value for x in peers if x.value != 0]
-            cell.possible_values = [x for x in range(1, 10) if x not in value_from_peers] 
+            cell.possible_values = list(DIGITS - set(x.value for x in self.grid.peers(cell) if x.value != 0))
 
-    def remove_value_from_peers(self, cell):  
-        for p in (peer for peer in self.grid.peers(cell) if peer.value == 0):
+    def remove_value_from_peers(self, cell):
+        peers = self.grid.peers(cell)
+        for p in (peer for peer in peers if peer.value == 0):
             if cell.value in p.possible_values:
                 p.possible_values.remove(cell.value)
             if len(p.possible_values) == 0:
                 raise ValueError("No possible value [" + str(p.row) + ", " + str(p.col) + "]")
 
     def set_value_for_cell(self, cell, value):
-        peers = self.grid.peers(cell);
+        peers = self.grid.peers(cell)
         
         if any(x.value is value for x in peers):
             raise ValueError('Tried to set value that already exists in peers')
@@ -98,8 +95,7 @@ class Solver(object):
 
     def find_unique_values_in_units(self, cell=None):
         if cell is not None:
-            sg = self.grid.same_sub_grid_as(cell)
-            for unit in [sg, self.grid.same_col_as(cell), self.grid.same_row_as(cell)]:
+            for unit in [self.grid.same_sub_grid_as(cell), self.grid.same_col_as(cell), self.grid.same_row_as(cell)]:
                 self.find_unique_possibility_in_unit(unit)  
         else:
             for unit in [x for l in [self.grid.rows, self.grid.columns(), self.grid.subgrids()] for x in l]:

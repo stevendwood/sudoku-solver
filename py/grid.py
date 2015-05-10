@@ -48,9 +48,9 @@ class Grid(object):
         '''
         
         if cell.peers is None:
-            cell.peers = [x for x in self.same_sub_grid_as(cell) +
+            cell.peers = list(set([x for x in self.same_sub_grid_as(cell) +
                                         self.same_col_as(cell) + 
-                                        self.same_row_as(cell) if x is not cell]
+                                        self.same_row_as(cell) if x is not cell]))
         return cell.peers
 
     def columns(self):
@@ -183,6 +183,6 @@ class Cell(object):
 
     def __str__(self):
         if self.value == 0:
-            return '-'
+            return '.'
         else:
             return str(self.value)

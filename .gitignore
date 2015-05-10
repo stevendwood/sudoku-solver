@@ -59,3 +59,9 @@ docs/_build/
 
 # PyBuilder
 target/
+/bin/
+
+.DS_Store
+java/.classpath
+java/bin
+java/.settings/org.eclipse.jdt.core.prefs

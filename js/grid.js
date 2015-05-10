@@ -57,17 +57,19 @@
        	}
     	
     	columns() {
-    		var columns = [];
-    		for (let i=0; i<9; i++) {
-    			columns.push([]);
-    		}
-    		this.rows.forEach(function(row) {
-    			row.forEach(function(cell, idx) {
-    				columns[idx].push(cell);
-    			});
-    		});
+            if (!this._columns) {
+    		    this._columns = [];
+        		for (let i=0; i<9; i++) {
+        			this._columns.push([]);
+        		}
+        		this.rows.forEach(function(row) {
+        			row.forEach(function(cell, idx) {
+        				this._columns[idx].push(cell);
+        			}, this);
+        		}, this);
+            }
 
-    		return columns;
+    		return this._columns;
     	}
 
     	sameRowAs(cell) {
@@ -75,12 +77,7 @@
     	}
 
     	sameColAs(cell) {
-    		var column = [];
-    		this.rows.forEach(function(r) { 
-    			column.push(r[cell.col]);
-    		});
-
-    		return column;
+            return this.columns()[cell.col];
     	}
 
     	sameSubGridAs(cell) {
@@ -172,6 +169,8 @@
                 . x . | . . . | . . .
                 . x . | . . . | . . .
             */
+
+            // TODO fixme - this returns 24 peers there should only be 20.
             if (!cell.peers) {
                 cell.peers = this.sameColAs(cell)
             		     .concat(this.sameRowAs(cell))
