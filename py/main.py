@@ -14,7 +14,7 @@ from solver import Solver
 total_time, total_guesses, puzzle_count = 0, 0, 0
 # ooh this is a nice feature of python, if your object implements
 # __enter__ and __exit__ the you can use with rather than try: finally
-with open('../hard-puzzles.txt') as f:
+with open('../puzzles.txt') as f:
     puzzles = f.readlines()
     for puzzle in puzzles:
         puzzle_count += 1
@@ -36,5 +36,5 @@ with open('../hard-puzzles.txt') as f:
 
 
        
-print("Solved in avg "+str(round(total_time / puzzle_count)) + "ms.")
+print("Solved "+ str(puzzle_count)+" in avg "+str(round(total_time / puzzle_count)) + "ms.")
 print("Had to make "+str(total_guesses)+ " guesses")

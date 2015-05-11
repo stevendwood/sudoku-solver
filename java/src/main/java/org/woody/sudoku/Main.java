@@ -12,7 +12,7 @@ public class Main {
 		long totalTime = 0;
 		int puzzleCount = 0;
 		try {
-			buf = new BufferedReader(new FileReader("../hard-puzzles.txt"));
+			buf = new BufferedReader(new FileReader("../puzzles.txt"));
 			String currentLine;
 			while ((currentLine = buf.readLine()) != null) {
 				puzzleCount++;
@@ -28,7 +28,7 @@ public class Main {
 				totalGuesses += s.getGuesses();
 			}
 			
-			System.out.println("Solved in avg "+Math.round(totalTime / puzzleCount)+" ms.");
+			System.out.println("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms.");
 			System.out.println("Had to make "+totalGuesses+ " guesses");
 		} finally {
 			buf.close();

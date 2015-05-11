@@ -5,7 +5,7 @@
 	var Grid = require("./grid");
 	var Solver = require("./solver");
 
-	fs.readFile("../hard-puzzles.txt", "utf-8", function(error, data) {
+	fs.readFile("../puzzles.txt", "utf-8", function(error, data) {
 		var puzzles = data.split("\n"),
 			totalTime = 0,
 			puzzleCount = 0,
@@ -35,7 +35,7 @@
 			console.log("\n");
 		});
 
-		console.log("Solved in avg "+Math.round(totalTime / puzzleCount)+" ms.");
+		console.log("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms.");
 		console.log("Had to make "+totalGuesses+ " guesses");
 	});
 }());
