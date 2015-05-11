@@ -135,7 +135,7 @@ public class Grid {
         String output = "";
         for (int i = 0; i < this.rows.size(); i++) {
             if (i != 0 && i % 3 == 0) {
-                output += "---------+---------+---------n";
+                output += "---------+---------+---------\n";
             }
             
             List<Cell> currentRow = this.rows.get(i);
@@ -147,7 +147,7 @@ public class Grid {
                 output += " " + currentRow.get(j).toString() + " ";
             }
             
-            output += "n";
+            output += "\n";
         }
         
         return output;
