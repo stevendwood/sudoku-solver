@@ -9,12 +9,19 @@
 
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-    // Some useful map and filter functions
+    // These are a couple of useful map functions, pulling them up here
+    // speeds things up.
     var valueOfCell = (cell => cell.value),
-        possibleValuesOfCell = (cell => cell.possibleValues),
-        isUnsolved = (cell => cell.value === 0),
-        // turn a [[]] into a []
-        flatten = (arrayOfArrays => [].concat.apply([], arrayOfArrays));
+        possibleValuesOfCell = (cell => cell.possibleValues);
+
+    function flatten(arrayOfArrays) {
+        return [].concat.apply([], arrayOfArrays);
+    }
+
+    function isUnsolved(cell) {
+        // a filter function to weed out unsolved cells.
+        return cell.value === 0;
+    }
 
     class Solver {
 
@@ -67,7 +74,6 @@
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
                                      .forEach(cell => { 
                                         cell.value = 0;
-                                        resetPossibilities.push(cell);
                                         resetPossibilities = resetPossibilities.concat(this.grid.peers(cell));
                                      }, this);
 

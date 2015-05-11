@@ -51,7 +51,7 @@ class Solver(object):
                     reset = []
                     for c in solved_since_last_guess:
                         c.value = 0
-                        reset += [c] + self.grid.peers(c)
+                        reset += self.grid.peers(c)
                     # need to provide a new set of possible values for all those cells
                     # that are affected by the incorrect guess.
                     self.init_possible_values([x for x in set(reset) if x.value == 0])

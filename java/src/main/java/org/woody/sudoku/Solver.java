@@ -61,7 +61,6 @@ public class Solver {
                 
                 removals.forEach(c -> {
                     c.setValue(0);
-                    //resetPossibilities.add(c);
                     resetPossibilities.addAll(this.grid.peers(c));
                 });
                 
