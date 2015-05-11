@@ -19,7 +19,7 @@ class Solver(object):
         self._solved_cells = []
 
     def solve(self):
-        # work out what the set of possible values is for each unsolve cell.
+        # work out what the set of possible values is for each unsolved cell.
         self.init_possible_values()
         # if there are any with only one possible value, set it.
         self.find_cells_with_one_possible_value(self.grid.unsolved())

@@ -174,11 +174,12 @@ public class Solver {
             			  this.grid.sameRowAs(cell),
             			  this.flattenSubGrid(this.grid.sameSubGridAs(cell)))
             	.forEach(this::findUniquePossibiltyInUnit);   
-            } else {
-            this.grid.subgrids().forEach(sg -> {
-                this.findUniquePossibiltyInUnit(this.flattenSubGrid(sg));
-            });
-            
+        } else {
+        	Arrays.asList(this.grid.columns(), this.grid.rows())
+        		.forEach(units -> units.forEach(this::findUniquePossibiltyInUnit));
+        	this.grid.subgrids().forEach(sg -> {
+        		this.findUniquePossibiltyInUnit(this.flattenSubGrid(sg));
+        	});
         }
     }
     
