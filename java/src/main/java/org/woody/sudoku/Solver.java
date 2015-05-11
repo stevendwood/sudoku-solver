@@ -34,7 +34,7 @@ public class Solver {
         }
     }
     
-    private void search() throws DeadEnd {
+    private void search() {
         Cell cell = Collections.min(this.grid.unsolved(), (x, y) -> {
             int xVal = x.getPossibleValues().size() * 100 + (x.getRow() + x.getCol()),
             	yVal = y.getPossibleValues().size() * 100 + (y.getRow() + y.getCol());
@@ -55,12 +55,7 @@ public class Solver {
                     this.search();
                 }
             } catch (DeadEnd inconsistency) {
-                // here's the back tracking part, we've ended up in a position
-                // where we
-                // can't progress, so before we try another value, undo all the
-                // values
-                // we set since the last guess.
-                
+                // backtrack...
                 HashSet<Cell> resetPossibilities = new HashSet<>();
                 List<Cell> removals = this.solvedCells.subList(numSolved, this.solvedCells.size());
                 
@@ -70,8 +65,7 @@ public class Solver {
                     resetPossibilities.addAll(this.grid.peers(c));
                 });
                 
-                this.solvedCells = new ArrayList<Cell>(
-                this.solvedCells.subList(0, numSolved));
+                this.solvedCells = new ArrayList<Cell>(this.solvedCells.subList(0, numSolved));
                 this.initPossibleValues(resetPossibilities.stream()
                 		.filter(x -> x.getValue() == 0)
                 		.collect(Collectors.toList()));
@@ -82,8 +76,8 @@ public class Solver {
             // solution despite trying
             // all possible values for a cell.
             throw new DeadEnd("Tried all values for this cell  ["
-            + cell.getRow() + ", " + cell.getCol() + "]"
-            + cell.getPossibleValues());
+            		+ cell.getRow() + ", " + cell.getCol() + "]"
+            		+ cell.getPossibleValues());
         }
     }
     
