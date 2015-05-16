@@ -14,7 +14,7 @@
         possibleValuesOfCell = (cell => cell.possibleValues);
 
     // filter unsolved cells out of a list cells.
-    var = isUnsolved = (cell => cell.value === 0);
+    var isUnsolved = (cell => cell.value === 0);
 
     class Solver {
 
