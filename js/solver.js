@@ -1,27 +1,18 @@
-/****************************************************************
 
-    Solver...
-
-*/
 (function() {
 
     "use strict";
+
+    // [[1, 2, 3], [1, 2, 3]].flatten() gives [1, 2, 3, 1, 2, 3]
+    Array.prototype.flatten = () => [].concat.apply([], this);
 
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // These are a couple of useful map functions, pulling them up here
     // speeds things up.
     var valueOfCell = (cell => cell.value),
-        possibleValuesOfCell = (cell => cell.possibleValues);
-
-    function flatten(arrayOfArrays) {
-        return [].concat.apply([], arrayOfArrays);
-    }
-
-    function isUnsolved(cell) {
-        // a filter function to weed out unsolved cells.
-        return cell.value === 0;
-    }
+        possibleValuesOfCell = (cell => cell.possibleValues),
+        isUnsolved = (cell => cell.value === 0);
 
     class Solver {
 
@@ -139,14 +130,11 @@
         _findUniqueValuesInUnits(cell) {
 
             if (cell) {
-                let sg = this.grid.sameSubGridAs(cell);
-                sg = flatten(sg);
-                [sg, this.grid.sameColAs(cell), this.grid.sameRowAs(cell)].forEach(this._findUniquePossibiltyInUnit, this);
+                [this.grid.sameSubGridAs(cell).flatten(),
+                 this.grid.sameColAs(cell),
+                 this.grid.sameRowAs(cell)].forEach(this._findUniquePossibiltyInUnit, this);
             } else {
-                let subGrids = [];
-                this.grid.subgrids().forEach((sg) => {
-                    subGrids.push(flatten(sg));
-                });
+                let subGrids = this.grid.subgrids().map(sg => sg.flatten());
             
                 for (let units of [subGrids, this.grid.columns(), this.grid.rows]) {
                     for (let unit of units) {
@@ -162,12 +150,10 @@
                 var unique,
                     otherCellsPossValues = unit
                         .filter(c => c !== unsolvedCell)
-                        .map(possibleValuesOfCell);
+                        .map(possibleValuesOfCell)
+                        .flatten();
                         //.reduce((a, b) => a.concat(b));  
                
-                // the above reduce to flatten an [][] to a [] is not efficient because it
-                // will call concat many times...
-                otherCellsPossValues = flatten(otherCellsPossValues);
                 unique = unsolvedCell.possibleValues.filter(x => otherCellsPossValues.indexOf(x) === -1);
                 if (unique.length === 1) {
                     this._setValueForCell(unsolvedCell, unique[0]);

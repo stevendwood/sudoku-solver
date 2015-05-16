@@ -35,7 +35,7 @@
 			console.log("\n");
 		});
 
-		console.log("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms.");
+		console.log("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms. Total time :"+totalTime+"ms");
 		console.log("Had to make "+totalGuesses+ " guesses");
 	});
 }());

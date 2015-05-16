@@ -12,7 +12,7 @@ public class Solver {
     
     private Grid grid;
     
-    private List<Cell> solvedCells = new ArrayList<Cell>();
+    private List<Cell> solvedCells = new ArrayList<>();
     
     private int guesses = 0;
     

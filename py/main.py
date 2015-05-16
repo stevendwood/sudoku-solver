@@ -36,5 +36,5 @@ with open('../puzzles.txt') as f:
 
 
        
-print("Solved "+ str(puzzle_count)+" in avg "+str(round(total_time / puzzle_count)) + "ms.")
+print("Solved "+ str(puzzle_count)+" in avg "+str(round(total_time / puzzle_count)) + "ms. Total time: "+str(total_time)+"ms")
 print("Had to make "+str(total_guesses)+ " guesses")

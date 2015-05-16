@@ -28,7 +28,7 @@ public class Main {
 				totalGuesses += s.getGuesses();
 			}
 			
-			System.out.println("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms.");
+			System.out.println("Solved "+puzzleCount+" in avg "+Math.round(totalTime / puzzleCount)+" ms. Total time: "+totalTime+"ms");
 			System.out.println("Had to make "+totalGuesses+ " guesses");
 		} finally {
 			buf.close();
