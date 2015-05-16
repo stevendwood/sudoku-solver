@@ -11,8 +11,10 @@
     // These are a couple of useful map functions, pulling them up here
     // speeds things up.
     var valueOfCell = (cell => cell.value),
-        possibleValuesOfCell = (cell => cell.possibleValues),
-        isUnsolved = (cell => cell.value === 0);
+        possibleValuesOfCell = (cell => cell.possibleValues);
+
+    // filter unsolved cells out of a list cells.
+    var = isUnsolved = (cell => cell.value === 0);
 
     class Solver {
 
