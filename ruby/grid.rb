@@ -1,9 +1,17 @@
+'''
+[1, 2, 3, 4].each_with_index {|item, idx| puts "#{item} at #{idx}"
+
+[1, 2, 3, 4].each_with_index do |item, idx| 
+    puts "#{item} at #{idx}"
+end
+'''
 class Grid
 
     attr_accessor :rows
 
     def initialize(input_str)
         @rows = []
+        @cols = []
         row_idx = 0
         until input_str.length == 0 do
             row = input_str.slice!(0..8)
@@ -20,7 +28,30 @@ class Grid
         end
     end
 
+    def same_row_as(cell) 
+       return @rows[cell.row]
+    end
+
+    def same_col_as(cell)
+        return columns[cell.col]
+    end
+
+    def columns
+        if @cols.length == 0
+            for idx in 0..8
+                @cols << []
+            end
+            @rows.each do |row|
+                row.each_with_index { |cell, idx| @cols[idx] << cell }
+            end
+        end
+
+        return @cols
+    end
+
     def to_s
+            
+        #Provide a string representation of a grid.
         output = ""
         for row in 0..@rows.length-1
             if row != 0 && row % 3 == 0
