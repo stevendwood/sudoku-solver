@@ -61,6 +61,7 @@ public class Solver {
                 
                 removals.forEach(c -> {
                     c.setValue(0);
+                    resetPossibilities.add(c);
                     resetPossibilities.addAll(this.grid.peers(c));
                 });
                 
@@ -129,6 +130,7 @@ public class Solver {
         }
         
         cell.setValue(value);
+        cell.setPossibleValues(new ArrayList<>());
         this.solvedCells.add(cell);
         this.removeValueFromPeers(cell);
         this.findCellsWithOnePossibleValue(peers);
