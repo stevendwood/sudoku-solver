@@ -22,8 +22,8 @@
 				start;
 
 			console.log(g.toString());
-			start = Date.now();
 			
+			start = Date.now();			
 			solver.solve();
 			let time =  Date.now() - start;
 			totalTime += time
