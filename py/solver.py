@@ -81,6 +81,7 @@ class Solver(object):
             raise ValueError('Tried to set value that already exists in peers')
         
         cell.value = value
+        cell.possible_values = []
         self._solved_cells.append(cell)
         self.remove_value_from_peers(cell)
         self.find_cells_with_one_possible_value(peers)

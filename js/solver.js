@@ -62,11 +62,12 @@
                 } catch (inconsistency) {
                     // here's the back tracking part, we've ended up in a position where we
                     // can't progress, so before we try another value, undo all the values
-                    // we set since the last guess.   
+                    // we set since the last guess.  
                     let resetPossibilities = [];   
                     this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
                                      .forEach(cell => { 
                                         cell.value = 0;
+                                        resetPossibilities.push(cell);
                                         resetPossibilities = resetPossibilities.concat(this.grid.peers(cell));
                                      }, this);
 
@@ -114,6 +115,7 @@
             }
             
             cell.value = value;
+            cell.possibleValues = [];
             this._solvedCells.push(cell);
             this._removeValueFromPeers(cell);
             this._findCellsWithOnePossibleValue(peers);
@@ -151,7 +153,7 @@
             unsolved.forEach(unsolvedCell => {
                 var unique,
                     otherCellsPossValues = unit
-                        .filter(c => c !== unsolvedCell)
+                        .filter(c => c !== unsolvedCell && isUnsolved(c))
                         .map(possibleValuesOfCell)
                         .flatten();
                         //.reduce((a, b) => a.concat(b));  
