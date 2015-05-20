@@ -192,7 +192,7 @@ public class Solver {
         				.flatMap(listStream -> listStream.stream())
         				.collect(Collectors.toList());
             
-            List<Integer> unique = unsolvedCell.getPossibleValues().stream()
+                List<Integer> unique = unsolvedCell.getPossibleValues().stream()
             		.filter(x -> !otherCellsPossValues.contains(x))
             		.collect(Collectors.toList());
             

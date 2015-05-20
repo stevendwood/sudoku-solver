@@ -5,8 +5,6 @@
     solver = Solver(g)
     solver.solve()
 '''
-from grid import Cell
-
 DIGITS = set(x for x in range(1, 10))
 
 class Solver(object):
