@@ -172,7 +172,7 @@ class Cell(object):
     def __init__(self, row, col, value=0):
         self.row = row
         self.col = col
-        if value is '.':
+        if value == '.':
             value = 0
         self.value = int(value)
         self.possible_values = []
