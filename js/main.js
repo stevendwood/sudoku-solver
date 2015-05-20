@@ -5,6 +5,9 @@
 	var Grid = require("./grid");
 	var Solver = require("./solver");
 
+	// [[1, 2, 3], [1, 2, 3]].flatten() gives [1, 2, 3, 1, 2, 3]
+    Array.prototype.flatten = () => [].concat.apply([], this);
+
 	fs.readFile("../puzzles.txt", "utf-8", function(error, data) {
 		var puzzles = data.split("\n"),
 			totalTime = 0,

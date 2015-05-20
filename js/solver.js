@@ -3,9 +3,6 @@
 
     "use strict";
 
-    // [[1, 2, 3], [1, 2, 3]].flatten() gives [1, 2, 3, 1, 2, 3]
-    Array.prototype.flatten = () => [].concat.apply([], this);
-
     var DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // These are a couple of useful map functions, pulling them up here

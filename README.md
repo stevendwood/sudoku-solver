@@ -2,10 +2,11 @@
 A sudoku solver in various languages, the actual algorithm to solve the puzzles doesn't seem very efficient, but it works.  Nothing much to see here, just me attempting to learn some new languages (and implement the same solution in some I already know...)
 
   * Python
-  * JavaScript  This version uses some ES6 features, (arrow functions, for..of and let) so requires io.js: 
+  * JavaScript  This version uses some ES6 features, (classes, arrow functions, for..of and let, Array.from) so requires io.js: 
   
-        iojs --harmony_arrow_functions --es_staging main.js
+        iojs --harmony_arrow_functions --harmony_arrays --es_staging main.js
   * Java 8
+  * Ruby (in progress)
 
 There's a list of hard puzzles pruned from the project euler site.  The program reads the file and solves each puzzle. Each line is e.g.
 

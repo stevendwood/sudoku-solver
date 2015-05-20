@@ -133,23 +133,15 @@
     	}
 
     	unsolved() {
-    		var unsolved = [];
-    		this.rows.forEach(row => {
-    			unsolved = unsolved.concat(row.filter(c => c.value === 0));
-    		});
-
-    		return unsolved;
+    		return this.rows
+                    .flatten()
+                    .filter(c => c.value === 0);
     	}
 
     	isSolved() {
-    		for (let i=0; i<this.rows.length; i++) {
-    			for (let col=0; col<9; col++) {
-    				if ((this.rows[i][col]).value === 0) {
-    					return false;
-    				} 
-    			}
-    		}
-    		return true;
+            return !(this.rows
+                    .flatten()
+                    .some(x => x.value === 0));
     	}
 
     	peers(cell) {
@@ -169,14 +161,14 @@
                 . x . | . . . | . . .
                 . x . | . . . | . . .
             */
-
-            // TODO fixme - this returns 24 peers there should only be 20.
             if (!cell.peers) {
-                cell.peers = this.sameColAs(cell)
-            		     .concat(this.sameRowAs(cell))
-            		     // need to flatten the sub grids as it's an [[]]
-            		     .concat([].concat.apply([], this.sameSubGridAs(cell)))
-            		     .filter(x => x !== cell);
+                cell.peers = Array.from(new Set(
+                        this.sameColAs(cell)
+            		        .concat(this.sameRowAs(cell))
+            		        .concat(this.sameSubGridAs(cell).flatten())
+            		        .filter(x => x !== cell)
+                    )
+                );
             }
 
             return cell.peers;
