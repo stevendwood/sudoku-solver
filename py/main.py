@@ -22,17 +22,17 @@ with open('../puzzles.txt') as f:
         solver = Solver(grid)
         print(grid)
         start = time.time() * 1000
-        try:
-            solver.solve()
-            took = round(time.time() * 1000 - start)
-            print(str(grid) +"\n")
-            print("solved in "+str(took)+"ms with "+str(solver.guesses)+" guesses.")
-            total_time += took
-            total_guesses += solver.guesses 
-        except ValueError as inconsistency:
-            print("Couldn't solve it")
-            print(inconsistency)
-            print(grid)
+        #try:
+        solver.solve()
+        took = round(time.time() * 1000 - start)
+        print(str(grid) +"\n")
+        print("solved in "+str(took)+"ms with "+str(solver.guesses)+" guesses.")
+        total_time += took
+        total_guesses += solver.guesses 
+        #except ValueError as inconsistency:
+        #print("Couldn't solve it")
+        #print(inconsistency)
+        #print(grid)
 
 
        
