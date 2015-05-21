@@ -37,13 +37,21 @@ class Grid
         return columns[cell.col]
     end
 
+    def same_sub_grid_as(cell)
+        if cell.subgrid.nil?
+            
+        end
+
+        return cell.subgrid
+    end
+
     def subgrids
         if @grids.length == 0
             (0..8).step(3).each do |i| 
                 (0..8).step(3).each { |j| @grids << same_sub_grid_as(Cell.new(i, j, 0)) }
             end
         end
-            return this.grids;
+        return this.grids;
     end
 
     def columns
@@ -84,7 +92,7 @@ end
 
 class Cell
   # getter and setter
-  attr_accessor :value, :possible_values, :row, :col
+  attr_accessor :value, :possible_values, :row, :col, :subgrid
 
   # read only
   attr_reader :row, :col
@@ -95,6 +103,7 @@ class Cell
     @col = col
     @value = value
     @possible_values = []
+    @subgrid
   end
 
   def to_s

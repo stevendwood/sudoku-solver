@@ -29,7 +29,7 @@ class Solver(object):
             self._search();
 
     def _search(self):      
-        cell = min(self.grid.unsolved(), key=lambda c: len(c.possible_values) * 100 + (c.row + c.col))
+        cell = min(self.grid.unsolved(), key=lambda c: len(c.possible_values)* 100 + (c.row + c.col))
         num_possibilities = len(cell.possible_values)
         for idx, value in enumerate(cell.possible_values):
             num_solved = len(self._solved_cells)
