@@ -1,16 +1,28 @@
 require_relative 'grid'
+require_relative 'solver'
 
-
-#text = File.open('../puzzles.txt').read
-#text.each_line do |line|
-#    grid = Grid.new(line)
-#    puts grid
-#end
-grid_data = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......"
-grid = Grid.new(grid_data)
-
-puts grid
+total_guesses = 0
+puzzle_count = 0
+total_time = 0
+text = File.open('../puzzles.txt').read
+text.each_line do |line|
+    total_guesses += 1
+    puzzle_count += 1
+    grid = Grid.new(line)
+    puts grid
+    solver = Solver.new(grid)
+    start = Time.now
+    solver.solve
+    took = ((Time.now - start) * 1000).to_i
+    total_time += took
+    puts
+    puts grid
+    puts
+    puts "solved in #{took}ms with #{solver.guesses} guesses."
+    total_guesses += solver.guesses
+    puts
+end
 puts
-#puts grid.columns[0][8]
-#puts grid.rows[0]
-grid.subgrids.each {|sg| puts "====" + sg.to_s + "===="}
+puts "Solved #{puzzle_count}  in avg #{(total_time / puzzle_count).to_i} ms. Total time  #{total_time}ms"
+puts "Had to make #{total_guesses} guesses"
+

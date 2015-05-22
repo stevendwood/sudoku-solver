@@ -1,10 +1,6 @@
-'''
-[1, 2, 3, 4].each_with_index {|item, idx| puts "#{item} at #{idx}"
 
-[1, 2, 3, 4].each_with_index do |item, idx| 
-    puts "#{item} at #{idx}"
-end
-'''
+require 'set'
+
 class Grid
 
     attr_accessor :rows
@@ -18,12 +14,14 @@ class Grid
             row = input_str.slice!(0..8)
             current_row = []
             if ! row.include? "\n"
-                row_idx += 1
+                
                 for col in 0..8
                     value = row[col]
                     value = value == "." ? 0 : value.to_i
                     current_row << Cell.new(row_idx, col, value)
                 end
+
+                row_idx += 1
                 @rows << current_row
             end
         end
@@ -47,6 +45,10 @@ class Grid
         end 
     end
 
+    def is_solved?
+        return ! @rows.flatten.any? { |x| x.value == 0 }
+    end
+
     def same_sub_grid_as(cell)
         if cell.subgrid.nil?
             start_row = _sub_grid_idx(cell.row)
@@ -57,10 +59,8 @@ class Grid
                 sub_grid_row = []
                 (start_col..start_col+2).each { |j| sub_grid_row << row[j] }
                 subgrid << sub_grid_row
-            end
-                
-            cell.subgrid = subgrid;
-            
+            end           
+            cell.subgrid = subgrid; 
         end
 
         return cell.subgrid
@@ -75,6 +75,10 @@ class Grid
         return @grids;
     end
 
+    def unsolved
+        return @rows.flatten.select {|c| c.value == 0}
+    end
+
     def columns
         if @cols.length == 0
             for idx in 0..8
@@ -86,6 +90,24 @@ class Grid
         end
 
         return @cols
+    end
+
+    def peers(cell)
+        if cell.peers.nil?
+            # concatenate all cells in the same row, column and sub grid, then flatten them
+            # and remove the argument cell, should produce a list of 20 cells.
+
+           # puts "same row as length is #{same_row_as(cell).length}"
+           # puts "same col as length is #{same_col_as(cell).length}"
+           # puts "same grid as length is #{same_sub_grid_as(cell).flatten.length}"
+            cell.peers = [].concat(same_row_as(cell))
+                        .concat(same_col_as(cell))
+                        .concat(same_sub_grid_as(cell).flatten)
+                        .select { |x| x != cell }
+                        .to_set
+           # puts "peers length is #{cell.peers.length}"
+        end
+        return cell.peers
     end
 
     def to_s 
@@ -113,7 +135,7 @@ end
 
 class Cell
   # getter and setter
-  attr_accessor :value, :possible_values, :row, :col, :subgrid
+  attr_accessor :value, :possible_values, :row, :col, :subgrid, :peers
 
   # read only
   attr_reader :row, :col
@@ -125,6 +147,7 @@ class Cell
     @value = value
     @possible_values = []
     @subgrid
+    @peers
   end
 
   def to_s

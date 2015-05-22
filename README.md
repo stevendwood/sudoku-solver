@@ -6,7 +6,7 @@ A sudoku solver in various languages, the actual algorithm to solve the puzzles 
   
         iojs --harmony_arrow_functions --harmony_arrays --es_staging main.js
   * Java 8
-  * Ruby (in progress)
+  * Ruby
 
 There's a list of hard puzzles pruned from the project euler site.  The program reads the file and solves each puzzle. Each line is e.g.
 
