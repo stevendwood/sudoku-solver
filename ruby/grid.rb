@@ -96,16 +96,11 @@ class Grid
         if cell.peers.nil?
             # concatenate all cells in the same row, column and sub grid, then flatten them
             # and remove the argument cell, should produce a list of 20 cells.
-
-           # puts "same row as length is #{same_row_as(cell).length}"
-           # puts "same col as length is #{same_col_as(cell).length}"
-           # puts "same grid as length is #{same_sub_grid_as(cell).flatten.length}"
             cell.peers = [].concat(same_row_as(cell))
                         .concat(same_col_as(cell))
                         .concat(same_sub_grid_as(cell).flatten)
                         .select { |x| x != cell }
                         .to_set
-           # puts "peers length is #{cell.peers.length}"
         end
         return cell.peers
     end
