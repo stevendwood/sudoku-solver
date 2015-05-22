@@ -28,4 +28,11 @@ The algorithm is a back tracking search, it works something like this.
 6. Try and solve the grid using steps 1 - 5 until we either solve it or hit a dead end. When we hit a dead end, undo the last guess and it's side effects and try the next value.
 
 The backtracking bit is done by throwing and catching exceptions which is probably not very efficient but i chose it so it to learn about the languages Exception handling features.
+
+There are 106 puzzles, 
+
+* Java ~2.8s avg 27ms per puzzle
+* ES6  ~4.4s avg 42ms per puzzle
+* Python 3.4 ~8.7ms avg 82ms per puzzle
+* Ruby 2.0.0 ~17s avg 160ms per puzzle
         
