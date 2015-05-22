@@ -11,5 +11,6 @@ grid = Grid.new(grid_data)
 
 puts grid
 puts
-puts grid.columns[0][8]
-puts grid.rows[0]
+#puts grid.columns[0][8]
+#puts grid.rows[0]
+grid.subgrids.each {|sg| puts "====" + sg.to_s + "===="}

@@ -37,8 +37,29 @@ class Grid
         return columns[cell.col]
     end
 
+    def _sub_grid_idx(x)
+        if x <= 2
+            return 0
+        elsif x <= 5
+            return 3
+        else
+            return 6
+        end 
+    end
+
     def same_sub_grid_as(cell)
         if cell.subgrid.nil?
+            start_row = _sub_grid_idx(cell.row)
+            start_col = _sub_grid_idx(cell.col)
+            subgrid = []
+            (start_row..start_row+2).each do |i|
+                row = @rows[i]
+                sub_grid_row = []
+                (start_col..start_col+2).each { |j| sub_grid_row << row[j] }
+                subgrid << sub_grid_row
+            end
+                
+            cell.subgrid = subgrid;
             
         end
 
@@ -51,7 +72,7 @@ class Grid
                 (0..8).step(3).each { |j| @grids << same_sub_grid_as(Cell.new(i, j, 0)) }
             end
         end
-        return this.grids;
+        return @grids;
     end
 
     def columns
