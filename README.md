@@ -1,5 +1,5 @@
 # sudoku-solver
-A sudoku solver in various languages, the actual algorithm to solve the puzzles doesn't seem very efficient, but it works.  Nothing much to see here, just me attempting to learn some new languages (and implement the same solution in some I already know...)
+A sudoku solver in various languages, the actual algorithm to solve the puzzles doesn't seem very efficient, but it works.  Just me attempting to learn some new languages (and implement the same solution in some I already know...)
 
   * Python
   * JavaScript  This version uses some ES6 features, (classes, arrow functions, for..of and let, Array.from) so requires io.js: 
@@ -33,6 +33,6 @@ There are 106 puzzles,
 
 * Java ~2.8s avg 27ms per puzzle
 * ES6  ~4.4s avg 42ms per puzzle
-* Python 3.4 ~8.7ms avg 82ms per puzzle
+* Python 3.4 ~8.7s avg 82ms per puzzle
 * Ruby 2.0.0 ~17s avg 160ms per puzzle
         
