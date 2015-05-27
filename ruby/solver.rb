@@ -27,7 +27,13 @@ class Solver
 
     def search
         # pick the cell with least possible values (more chance of guessing correctly)
-        cell = @grid.unsolved.min { |x, y| x.possible_values.length * 100 + (x.row + x.col) <=> y.possible_values.length * 100 + (y.row + y.col) }
+        cell = @grid.unsolved.min { |x, y| 
+            xval = x.possible_values.length * 100 + (x.row + x.col) 
+            yval = y.possible_values.length * 100 + (y.row + y.col) 
+
+            xval <=> yval
+        }
+
         cell.possible_values.each do |value|        
             # remember how many cells we had solved before we begin incase
             # we need to unwind
@@ -62,23 +68,52 @@ class Solver
     end
 
     def init_possible_values(cells)
+        ''' 
+            Initialise the possible values for the provided list of cells or
+            all the unsolved cells in the grid if no list was provided.
+
+            To do this we collect the "peers" for each cell (cells not marked . for the cell c):
+
+            x x x | . . . | . . .
+            5 c x | x x 2 | x 9 x
+            x x 3 | . . . | . . .
+            ------+-------+------
+            . x . | . . . | . . .
+            . x . | . . . | . . .
+            . x . | . . . | . . .
+            ------+-------+------
+            . x . | . . . | . . .
+            . 7 . | . . . | . . .
+            . x . | . . . | . . .
+
+            Remove from the peers any unsolved cells, then exclude from the list 1..9 any 
+            numbers already present in the list of solved peers. e.g. in the above grid assuming
+            that any cell containing an x or a number is a peer of c and that the cells containing
+            the numbers are solved then the possible values for "c" are:
+
+            [1, 2, 3, 4, 5, 6, 7, 8, 9] - [5, 3, 2, 9, 7] = [8, 1, 4, 6]
+
+        '''
         if cells.nil?
             cells = @grid.unsolved
         end
 
         cells.each do |cell| 
-            #puts "peers length is #{@grid.peers(cell).length}"
+            # get the value of all solved peers
             peer_values = @grid.peers(cell).select {|x| x.value != 0 }.map { |x| x.value }
-           # puts "Peer values is #{peer_values}"
+            # remove any numbers from 1..9 that exist in that values.
             cell.possible_values = @digits.select { |d| !peer_values.include? d }
-          #  puts "Possible values #{cell.possible_values} for #{cell.row}, #{cell.col}"
         end
     end
 
     def remove_value_from_peers(cell)
-        # Summary:
-        # Remove the value of cell from the possible values of 
-        # it's peers.
+        '''
+            Remove the value of the given cell from the possible values
+            of any unsolved peer cells.
+
+            If this results in a cell having no possible values, then 
+            raise an exception.
+        '''
         @grid.peers(cell)
             .select { |x| x.value == 0 }
             .each do |p| 

@@ -9,7 +9,7 @@ DIGITS = set(x for x in range(1, 10))
 
 class Solver(object):
     '''
-        Defines the solver algorithm
+        Defines the solver algorithm.  
     '''
     def __init__(self, grid):
         self.grid = grid
@@ -17,6 +17,16 @@ class Solver(object):
         self._solved_cells = []
 
     def solve(self):
+        '''
+            Solve the grid.  The algorithm is to first work out what the list
+            of possible values is for each unsolved cell. In some cases this
+            will result in a list of length 1, in which case we can set the value
+            for the cell to it's only possible value.  Having done this the next
+            step is to see whether there are any unsolved cells that have a possible
+            value which occurs in no other cell in the same row, same column or same
+            3x3 sub grid.  Repeat until we either solve the grid or no other cells
+            can be solved in which case we need to start searching for a solution.
+        '''
         # work out what the set of possible values is for each unsolved cell.
         self.init_possible_values()
         # if there are any with only one possible value, set it.
@@ -61,12 +71,45 @@ class Solver(object):
             raise ValueError("Tried all values for this cell  [" + str(cell.row) + ", " + str(cell.col) + "]" + str(cell.possible_values))
 
     def init_possible_values(self, cells=None):
+        ''' 
+            Initialise the possible values for the provided list of cells or
+            all the unsolved cells in the grid if no list was provided.
+
+            To do this we collect the "peers" for each cell (cells not marked . for the cell c):
+
+            x x x | . . . | . . .
+            5 c x | x x 2 | x 9 x
+            x x 3 | . . . | . . .
+            ------+-------+------
+            . x . | . . . | . . .
+            . x . | . . . | . . .
+            . x . | . . . | . . .
+            ------+-------+------
+            . x . | . . . | . . .
+            . 7 . | . . . | . . .
+            . x . | . . . | . . .
+
+            Remove from the peers any unsolved cells, then exclude from the list 1..9 any 
+            numbers already present in the list of solved peers. e.g. in the above grid assuming
+            that any cell containing an x or a number is a peer of c and that the cells containing
+            the numbers are solved then the possible values for "c" are:
+
+            [1, 2, 3, 4, 5, 6, 7, 8, 9] - [5, 3, 2, 9, 7] = [8, 1, 4, 6]
+
+        '''
         if cells is None:
             cells = self.grid.unsolved()
         for cell in cells:
             cell.possible_values = list(DIGITS - set(x.value for x in self.grid.peers(cell) if x.value != 0))
 
     def remove_value_from_peers(self, cell):
+        '''
+            Remove the value of the given cell from the possible values
+            of any unsolved peer cells.
+
+            If this results in a cell having no possible values, then 
+            raise an exception.
+        '''
         peers = self.grid.peers(cell)
         for p in (peer for peer in peers if peer.value == 0):
             if cell.value in p.possible_values:
