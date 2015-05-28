@@ -131,28 +131,27 @@ public class Solver {
         // Remove the value of cell from the possible values of
         // it's peers.
         this.grid.peers(cell)
-        .stream()
-        .filter(x -> x.getValue() == 0)
-        .forEach(p -> {
-            List<Integer> possibleValues = p.getPossibleValues();
-            // .remove(int) will remove at that index, need to
-            // make sure remove(Object) is called.
-            possibleValues.remove(new Integer(cell.getValue()));
-            
-            if (possibleValues.size() == 0) {
-                throw new DeadEnd("No possible values for cell ["
-                + p.getRow() + ", " + p.getCol() + "] "
-                + p.getValue());
-            }
-        });
+        	.stream()
+        	.filter(x -> x.getValue() == 0)
+        	.forEach(p -> {
+	            List<Integer> possibleValues = p.getPossibleValues();
+	            // .remove(int) will remove at that index, need to
+	            // make sure remove(Object) is called.
+	            possibleValues.remove(new Integer(cell.getValue()));
+	            
+	            if (possibleValues.size() == 0) {
+	                throw new DeadEnd("No possible values for cell ["
+	                + p.getRow() + ", " + p.getCol() + "] "
+	                + p.getValue());
+	            }
+	        });
     }
     
     private void setValueForCell(Cell cell, int value) {
         List<Cell> peers = this.grid.peers(cell);
         
         if (peers.stream().anyMatch(x -> x.getValue() == value)) {
-            throw new DeadEnd(
-            "Tried to set a value that already exists in peers");
+            throw new DeadEnd("Tried to set a value that already exists in peers");
         }
         
         cell.setValue(value);
@@ -203,7 +202,7 @@ public class Solver {
             	.forEach(this::findUniquePossibiltyInUnit);   
         } else {
         	Arrays.asList(this.grid.columns(), this.grid.rows())
-        		.forEach(units -> units.forEach(this::findUniquePossibiltyInUnit));
+        		  .forEach(units -> units.forEach(this::findUniquePossibiltyInUnit));
         	this.grid.subgrids().forEach(sg -> {
         		this.findUniquePossibiltyInUnit(this.flattenSubGrid(sg));
         	});
