@@ -23,7 +23,7 @@ public class Main {
 				buf.lines()
 				   .parallel()
 				   .map(Main::solve)
-			       .collect(Collectors.toList());
+				   .collect(Collectors.toList());
 			
 			results.forEach((result) -> {
 				System.out.println(result.solvedGrid);

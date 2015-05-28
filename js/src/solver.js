@@ -117,7 +117,7 @@
             //  it's peers.
             this.grid.peers(cell)
                     .filter(isUnsolved)
-                    .forEach((p) => { 
+                    .forEach(p => { 
                         var idx = p.possibleValues.indexOf(cell.value);
                         if (idx !== -1) {
                             p.possibleValues.splice(idx, 1);
