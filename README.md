@@ -31,7 +31,7 @@ The backtracking bit is done by throwing and catching exceptions which is probab
 
 There are 106 puzzles, 
 
-* Java ~2.8s avg 27ms per puzzle
+* Java ~2s avg 19ms per puzzle
 * ES6  ~4.4s avg 42ms per puzzle
 * Python 3.4 ~8.7s avg 82ms per puzzle
 * Ruby 2.0.0 ~17s avg 160ms per puzzle

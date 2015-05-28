@@ -15,16 +15,20 @@ public class Main {
 			buf = new BufferedReader(new FileReader("../puzzles.txt"));
 			/* 
 			 * All right so this is a bit over the top, but I'm doing this
-			 * to learn about streams and map/reduce/collect and all that
+			 * to learn about streams and map/reduce/collect and all that.
+			 * Since there are 106 puzzles to solve and each solve operation
+			 * is computationally independant, run them in parallel.
 			 */
 			List<SolveResult> results = 
 				buf.lines()
+				   .parallel()
 				   .map(Main::solve)
 			       .collect(Collectors.toList());
 			
 			results.forEach((result) -> {
 				System.out.println(result.solvedGrid);
 				System.out.println("Solved in "+result.time+"ms. with "+result.guesses+" guesses.");
+				System.out.println();
 			});
 			
 			Optional<Long> totalTime = results.stream()
