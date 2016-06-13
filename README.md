@@ -2,9 +2,7 @@
 A sudoku solver in various languages, the actual algorithm to solve the puzzles doesn't seem very efficient, but it works.  Just me attempting to learn some new languages (and implement the same solution in some I already know...)
 
   * Python
-  * JavaScript  This version uses some ES6 features, (classes, arrow functions, for..of and let, Array.from) so requires io.js: 
-  
-        iojs --harmony_arrow_functions --harmony_arrays --es_staging main.js
+  * JavaScript (ES6)
   * Java 8
   * Ruby
 
@@ -18,7 +16,7 @@ Since each language so far supports OO there are 3 classes and a "main" file or 
 * Cell - models a single Cell, and retains a list of "possible values" that a solver can fiddle with.
 * Solver - implements the Solver algorithm.  
 
-The algorithm is a back tracking search, it works something like this.
+The algorithm works something like this.
 
 1. Compute the list of possible values for all unsolved cells.
 2. If any cells have only one possible value, set it.

@@ -133,6 +133,7 @@
     	}
 
     	unsolved() {
+
     		return this.rows
                     .flatten()
                     .filter(c => c.value === 0);
