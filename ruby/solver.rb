@@ -100,7 +100,9 @@ class Solver
 
         cells.each do |cell| 
             # get the value of all solved peers
-            peer_values = @grid.peers(cell).select {|x| x.value != 0 }.map { |x| x.value }
+            peer_values = @grid.peers(cell)
+                                .select {|x| x.value != 0 }
+                                .map { |x| x.value }
             # remove any numbers from 1..9 that exist in that values.
             cell.possible_values = @digits.select { |d| !peer_values.include? d }
         end
