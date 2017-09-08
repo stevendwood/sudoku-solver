@@ -65,5 +65,6 @@ target/
 java/.classpath
 java/bin
 java/.settings/org.eclipse.jdt.core.prefs
+java/*.class
 
 js/node_modules
