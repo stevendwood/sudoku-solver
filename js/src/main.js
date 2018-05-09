@@ -1,14 +1,13 @@
-(function() {
-    "use strict"
 
-    var fs = require('fs');
-    var Grid = require("./grid");
-    var Solver = require("./solver");
+
+    const fs = require('fs');
+    const Grid = require("./grid");
+    const Solver = require("./solver");
 
     Array.prototype.flatten = function() { return [].concat.apply([], this); }
 
     fs.readFile("../../puzzles.txt", "utf-8", function(error, data) {
-        var puzzles = data.split("\n"),
+        let puzzles = data.split("\n"),
             totalTime = 0,
             puzzleCount = 0,
             totalGuesses = 0;
@@ -16,7 +15,7 @@
         puzzles.forEach(puzzle => {
             puzzleCount++;
 
-            var g = new Grid(puzzle.trim()),
+            let g = new Grid(puzzle.trim()),
                 solver = new Solver(g),
                 start;
 
@@ -40,4 +39,3 @@
         console.log("Solved " + puzzleCount + " in avg " + Math.round(totalTime / puzzleCount) + " ms. Total time :" + totalTime + "ms");
         console.log("Had to make " + totalGuesses + " guesses");
     });
-}());
