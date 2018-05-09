@@ -1,17 +1,14 @@
-
-
 const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // These are a couple of useful map functions, pulling them up here
 // speeds things up.
-const valueOfCell = (cell => cell.value),
-      possibleValuesOfCell = (cell => cell.possibleValues);
+const valueOfCell = cell => cell.value,
+    possibleValuesOfCell = cell => cell.possibleValues;
 
 // filter unsolved cells out of a list cells.
-const isUnsolved = (cell => cell.value === 0);
+const isUnsolved = cell => cell.value === 0;
 
 class Solver {
-
     constructor(grid) {
         this.grid = grid;
         this.guesses = 0;
@@ -34,12 +31,12 @@ class Solver {
 
     _search() {
         // pick the cell with least possible values (more chance of guessing correctly)
-        const cell = (this.grid.unsolved().sort((x, y) => {
+        const cell = this.grid.unsolved().sort((x, y) => {
             const xVal = x.possibleValues.length * 100 + (x.row + x.col),
-                  yVal = y.possibleValues.length * 100 + (y.row + y.col);
+                yVal = y.possibleValues.length * 100 + (y.row + y.col);
 
             return xVal - yVal;
-        }))[0];
+        })[0];
 
         for (let value of cell.possibleValues) {
             // remember how many cells we had solved before we begin incase
@@ -58,20 +55,30 @@ class Solver {
                 // can't progress, so before we try another value, undo all the values
                 // we set since the last guess.
                 let resetPossibilities = [];
-                this._solvedCells.splice(numSolved, this._solvedCells.length - numSolved)
-                                 .forEach(cell => {
-                                    cell.value = 0;
-                                    resetPossibilities.push(cell);
-                                    resetPossibilities = resetPossibilities.concat(this.grid.peers(cell));
-                                 }, this);
+                this._solvedCells
+                    .splice(numSolved, this._solvedCells.length - numSolved)
+                    .forEach(cell => {
+                        cell.value = 0;
+                        resetPossibilities.push(cell);
+                        resetPossibilities = resetPossibilities.concat(
+                            this.grid.peers(cell)
+                        );
+                    }, this);
 
-                this._initPossibleValues(new Set(resetPossibilities.filter(isUnsolved)));
+                this._initPossibleValues(
+                    new Set(resetPossibilities.filter(isUnsolved))
+                );
             }
         }
         if (!this.grid.isSolved()) {
             // If we get here then we're also stuck since we haven't found a solution despite trying
             // all possible values for a cell.
-            throw "Tried all values for this cell  [" + cell.row + ", " + cell.col + "]" + cell.possibleValues;
+            throw "Tried all values for this cell  [" +
+                cell.row +
+                ", " +
+                cell.col +
+                "]" +
+                cell.possibleValues;
         }
     }
 
@@ -101,29 +108,37 @@ class Solver {
 
             [1, 2, 3, 4, 5, 6, 7, 8, 9] - [5, 3, 2, 9, 7] = [8, 1, 4, 6]
         */
-        (cells || this.grid.unsolved()).forEach((cell) => {
+        (cells || this.grid.unsolved()).forEach(cell => {
             let peerValues = this.grid.peers(cell).map(valueOfCell),
-                possibleValues = DIGITS.filter(d => peerValues.indexOf(d) === -1);
-                cell.possibleValues = possibleValues;
-        }, this);
+                possibleValues = DIGITS.filter(
+                    d => peerValues.indexOf(d) === -1
+                );
+            cell.possibleValues = possibleValues;
+        });
     }
 
     _removeValueFromPeers(cell) {
         // Summary:
         //  Remove the value of cell from the possible values of
         //  it's peers.
-        this.grid.peers(cell)
-                .filter(isUnsolved)
-                .forEach(p => {
-                    const idx = p.possibleValues.indexOf(cell.value);
-                    if (idx !== -1) {
-                        p.possibleValues.splice(idx, 1);
-                    }
+        this.grid
+            .peers(cell)
+            .filter(isUnsolved)
+            .forEach(p => {
+                const idx = p.possibleValues.indexOf(cell.value);
+                if (idx !== -1) {
+                    p.possibleValues.splice(idx, 1);
+                }
 
-                    if (p.possibleValues.length === 0) {
-                        throw "No possible values for cell ["+p.row+", "+p.col+"] "+p.value;
-                    }
-                });
+                if (p.possibleValues.length === 0) {
+                    throw "No possible values for cell [" +
+                        p.row +
+                        ", " +
+                        p.col +
+                        "] " +
+                        p.value;
+                }
+            });
     }
 
     _setValueForCell(cell, value) {
@@ -142,7 +157,7 @@ class Solver {
     }
 
     _findCellsWithOnePossibleValue(cells) {
-        cells = (cells || this.grid.unsolved());
+        cells = cells || this.grid.unsolved();
         cells.forEach(cell => {
             if (cell.value === 0 && cell.possibleValues.length === 1) {
                 this._setValueForCell(cell, cell.possibleValues[0]);
@@ -151,11 +166,12 @@ class Solver {
     }
 
     _findUniqueValuesInUnits(cell) {
-
         if (cell) {
-            [this.grid.sameSubGridAs(cell).flatten(),
-             this.grid.sameColAs(cell),
-             this.grid.sameRowAs(cell)].forEach(this._findUniquePossibiltyInUnit, this);
+            [
+                this.grid.sameSubGridAs(cell).flatten(),
+                this.grid.sameColAs(cell),
+                this.grid.sameRowAs(cell)
+            ].forEach(this._findUniquePossibiltyInUnit, this);
         } else {
             let subGrids = this.grid.subgrids().map(sg => sg.flatten());
 
@@ -175,9 +191,11 @@ class Solver {
                     .filter(c => c !== unsolvedCell && isUnsolved(c))
                     .map(possibleValuesOfCell)
                     .flatten();
-                    //.reduce((a, b) => a.concat(b));
+            //.reduce((a, b) => a.concat(b));
 
-            unique = unsolvedCell.possibleValues.filter(x => otherCellsPossValues.indexOf(x) === -1);
+            unique = unsolvedCell.possibleValues.filter(
+                x => otherCellsPossValues.indexOf(x) === -1
+            );
             if (unique.length === 1) {
                 this._setValueForCell(unsolvedCell, unique[0]);
             }
