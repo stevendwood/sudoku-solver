@@ -27,5 +27,5 @@ The algorithm works something like this.
 
 The backtracking bit is done by throwing and catching exceptions which is probably not very efficient but i chose it so it to learn about the languages Exception handling features.
 
-There are 106 puzzles.
+There are 106 puzzles. ./run runs everything and puts the output into a new sub dir called logs (one log for each language)
 
