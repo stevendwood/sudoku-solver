@@ -1,14 +1,16 @@
-(function() {
-    "use strict"
+const fs = require('fs');
+const util = require('util')
+const Grid = require("./grid");
+const Solver = require("./solver");
 
-    var fs = require('fs');
-    var Grid = require("./grid");
-    var Solver = require("./solver");
+const readFile = util.promisify(fs.readFile);
 
-    Array.prototype.flatten = function() { return [].concat.apply([], this); }
+Array.prototype.flatten = function() { return [].concat.apply([], this); };
 
-    fs.readFile("puzzles.txt", "utf-8", function(error, data) {
-        var puzzles = data.split("\n"),
+(async () => {
+    try {
+        const data = await readFile("puzzles.txt", "utf-8");
+        let puzzles = data.split("\n"),
             totalTime = 0,
             puzzleCount = 0,
             totalGuesses = 0;
@@ -16,7 +18,7 @@
         puzzles.forEach(puzzle => {
             puzzleCount++;
 
-            var g = new Grid(puzzle.trim()),
+            let g = new Grid(puzzle.trim()),
                 solver = new Solver(g),
                 start;
 
@@ -39,5 +41,7 @@
 
         console.log("Solved " + puzzleCount + " in avg " + Math.round(totalTime / puzzleCount) + " ms. Total time :" + totalTime + "ms");
         console.log("Had to make " + totalGuesses + " guesses");
-    });
-}());
+    } catch (err) {
+        console.error("Failed to load puzzles...", err);
+    }
+})();
