@@ -13,11 +13,8 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader buf = null;
 		try {
-			File puzzles = new File("puzzles.txt");
-			if (!puzzles.exists()) {
-				puzzles = new File("../puzzles.txt");
-			}
-			buf = new BufferedReader(new FileReader(puzzles));
+			
+			buf = new BufferedReader(new FileReader("puzzles.txt"));
 			/* 
 			 * All right so this is a bit over the top, but I'm doing this
 			 * to learn about streams and map/reduce/collect and all that.
