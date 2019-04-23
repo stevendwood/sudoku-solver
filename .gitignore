@@ -68,3 +68,5 @@ java/.settings/org.eclipse.jdt.core.prefs
 java/**/*.class
 
 js/node_modules
+.classpath
+logs

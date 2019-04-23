@@ -1,6 +1,7 @@
 package org.woody.sudoku;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -12,7 +13,11 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader buf = null;
 		try {
-			buf = new BufferedReader(new FileReader("../puzzles.txt"));
+			File puzzles = new File("puzzles.txt");
+			if (!puzzles.exists()) {
+				puzzles = new File("../puzzles.txt");
+			}
+			buf = new BufferedReader(new FileReader(puzzles));
 			/* 
 			 * All right so this is a bit over the top, but I'm doing this
 			 * to learn about streams and map/reduce/collect and all that.

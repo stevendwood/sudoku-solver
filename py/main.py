@@ -14,7 +14,7 @@ from solver import Solver
 total_time, total_guesses, puzzle_count = 0, 0, 0
 # ooh this is a nice feature of python, if your object implements
 # __enter__ and __exit__ the you can use with rather than try: finally
-with open('../puzzles.txt') as f:
+with open('puzzles.txt') as f:
     puzzles = f.readlines()
     for puzzle in puzzles:
         puzzle_count += 1

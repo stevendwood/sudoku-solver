@@ -4,7 +4,7 @@ require_relative 'solver'
 total_guesses = 0
 puzzle_count = 0
 total_time = 0
-text = File.open('../puzzles.txt').read
+text = File.open('puzzles.txt').read
 text.each_line do |line|
     total_guesses += 1
     puzzle_count += 1

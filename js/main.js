@@ -7,7 +7,7 @@
 
     Array.prototype.flatten = function() { return [].concat.apply([], this); }
 
-    fs.readFile("../../puzzles.txt", "utf-8", function(error, data) {
+    fs.readFile("puzzles.txt", "utf-8", function(error, data) {
         var puzzles = data.split("\n"),
             totalTime = 0,
             puzzleCount = 0,

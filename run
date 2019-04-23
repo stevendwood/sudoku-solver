@@ -1,0 +1,17 @@
+#!/bin/bash
+TIMEFORMAT=%R
+if [ ! -d logs ]; then
+    echo "logs dir doesn't exist"
+    mkdir logs
+else
+    rm logs/*.log
+fi
+echo "Python..."
+time  python py/main.py > logs/py.log
+echo "Ruby..."
+time  ruby ruby/main.rb > logs/ruby.log
+javac java/src/main/java/org/woody/sudoku/*.java
+echo "Java"
+time  java -classpath java/src/main/java org.woody.sudoku.Main > logs/java.log
+echo "JavaScript"
+time  node js/main.js > logs/js.log
