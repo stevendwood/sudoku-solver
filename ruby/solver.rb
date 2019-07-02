@@ -27,14 +27,14 @@ class Solver
 
     def search
         # pick the cell with least possible values (more chance of guessing correctly)
-        cell = @grid.unsolved.min { |x, y| 
-            xval = x.possible_values.length * 100 + (x.row + x.col) 
-            yval = y.possible_values.length * 100 + (y.row + y.col) 
+        cell = @grid.unsolved.min { |x, y|
+            xval = x.possible_values.length * 100 + (x.row + x.col)
+            yval = y.possible_values.length * 100 + (y.row + y.col)
 
             xval <=> yval
         }
 
-        cell.possible_values.each do |value|        
+        cell.possible_values.each do |value|
             # remember how many cells we had solved before we begin incase
             # we need to unwind
             num_solved = @solved_cells.length
@@ -44,13 +44,13 @@ class Solver
                 set_value_for_cell(cell, value)
                 unless @grid.is_solved?
                     # no luck, keep looking...
-                    search   
-                end                   
-                
+                    search
+                end
+
             rescue Exception => inconsistency
                 reset_possibilities = []
                 @solved_cells.slice!(num_solved, @solved_cells.length - num_solved)
-                                    .each do |cell|  
+                                    .each do |cell|
                                         cell.value = 0;
                                         reset_possibilities << cell
                                         reset_possibilities.concat(@grid.peers(cell).to_a)
@@ -68,7 +68,7 @@ class Solver
     end
 
     def init_possible_values(cells)
-        ''' 
+        '''
             Initialise the possible values for the provided list of cells or
             all the unsolved cells in the grid if no list was provided.
 
@@ -86,7 +86,7 @@ class Solver
             . 7 . | . . . | . . .
             . x . | . . . | . . .
 
-            Remove from the peers any unsolved cells, then exclude from the list 1..9 any 
+            Remove from the peers any unsolved cells, then exclude from the list 1..9 any
             numbers already present in the list of solved peers. e.g. in the above grid assuming
             that any cell containing an x or a number is a peer of c and that the cells containing
             the numbers are solved then the possible values for "c" are:
@@ -98,10 +98,10 @@ class Solver
             cells = @grid.unsolved
         end
 
-        cells.each do |cell| 
+        cells.each do |cell|
             # get the value of all solved peers
             peer_values = @grid.peers(cell)
-                                .select {|x| x.value != 0 }
+                                .select { |x| x.value != 0 }
                                 .map { |x| x.value }
             # remove any numbers from 1..9 that exist in that values.
             cell.possible_values = @digits.select { |d| !peer_values.include? d }
@@ -113,12 +113,12 @@ class Solver
             Remove the value of the given cell from the possible values
             of any unsolved peer cells.
 
-            If this results in a cell having no possible values, then 
+            If this results in a cell having no possible values, then
             raise an exception.
         '''
         @grid.peers(cell)
             .select { |x| x.value == 0 }
-            .each do |p| 
+            .each do |p|
                 p.possible_values.delete_if { |v| v == cell.value }
                 if p.possible_values.length == 0
                     raise "No possible values for cell [#{p.row} , #{p.col}], having set #{cell.row}, #{cell.col}"
@@ -128,11 +128,11 @@ class Solver
 
     def set_value_for_cell(cell, value)
         peers = @grid.peers(cell)
-           
+
         if peers.any? { |x| x.value === value }
             raise "Tried to set a value for #{cell.row}, #{cell.col} that already exists in peers #{value}"
         end
-            
+
         cell.value = value
         cell.possible_values = []
         @solved_cells << cell
@@ -140,20 +140,20 @@ class Solver
         find_cells_with_one_possible_value(peers)
         find_unique_values_in_units(cell)
     end
-        
+
     def find_cells_with_one_possible_value(cells)
         if cells.nil?
             cells = @grid.unsolved
         end
-        
-        cells.each do |cell| 
+
+        cells.each do |cell|
             if cell.value == 0 and cell.possible_values.length == 1
                 set_value_for_cell(cell, cell.possible_values[0])
             end
         end
     end
 
-    def find_unique_values_in_units(cell) 
+    def find_unique_values_in_units(cell)
         unless cell.nil?
             [@grid.same_sub_grid_as(cell).flatten,
              @grid.same_col_as(cell),
@@ -169,20 +169,17 @@ class Solver
 
     def find_unique_possibilty_in_unit(unit)
         unsolved = unit.select { |x| x.value == 0 }
-        unsolved.each do |unsolved_cell| 
+        unsolved.each do |unsolved_cell|
             other_cells_poss_values = unit
                     .select { |c| c != unsolved_cell and c.value == 0 }
                     .map { |c| c.possible_values }
                     .flatten
-               
+
             unique = unsolved_cell.possible_values.select { |x| !(other_cells_poss_values.include?(x)) }
 
             if (unique.length === 1)
-                set_value_for_cell(unsolved_cell, unique[0])         
+                set_value_for_cell(unsolved_cell, unique[0])
             end
         end
     end
 end
-
-
-                       

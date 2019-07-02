@@ -23,7 +23,7 @@ public class Main {
 			 */
 			List<SolveResult> results = 
 				buf.lines()
-				   .parallel()
+				 //  .parallel()
 				   .map(Main::solve)
 				   .collect(Collectors.toList());
 			

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,11 +65,11 @@ public class Solver {
                     resetPossibilities.add(c);
                     resetPossibilities.addAll(this.grid.peers(c));
                 });
-                
-                this.solvedCells = new ArrayList<Cell>(this.solvedCells.subList(0, numSolved));
+                removals.clear();
+               // this.solvedCells = new ArrayList<Cell>(this.solvedCells.subList(0, numSolved));
                 this.initPossibleValues(resetPossibilities.stream()
                 		.filter(x -> x.getValue() == 0)
-                		.collect(Collectors.toList()));
+                		.collect(Collectors.toSet()));
             }
         }
         if (!this.grid.isSolved()) {
@@ -82,10 +83,10 @@ public class Solver {
     }
     
     private void initPossibleValues() {
-        this.initPossibleValues(this.grid.unsolved());
+        this.initPossibleValues(new HashSet<Cell>(this.grid.unsolved()));
     }
     
-    private void initPossibleValues(List<Cell> cells) {
+    private void initPossibleValues(Set<Cell> cells) {
         /* 
             Initialise the possible values for the provided list of cells or
             all the unsolved cells in the grid if no list was provided.
@@ -116,11 +117,11 @@ public class Solver {
             List<Integer> peerValues = this.grid.peers(cell).stream()
             		.filter(peerCell -> peerCell.getValue() != 0)
             		.map(peerCell -> peerCell.getValue())
-            		.collect(Collectors.toList());
+            		.collect(Collectors.toCollection(ArrayList::new));
             
             List<Integer> possibleValues = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
             		.filter(d -> !peerValues.contains(d))
-            		.collect(Collectors.toList());
+            		.collect(Collectors.toCollection(ArrayList::new));
             
             cell.setPossibleValues(possibleValues);
         });
@@ -190,7 +191,7 @@ public class Solver {
         //
         return subgrid.stream()
         		.flatMap(s -> s.stream())
-        		.collect(Collectors.toList());
+        		.collect(Collectors.toCollection(ArrayList::new));
     }
     
     private void findUniqueValuesInUnits(Cell cell) {
@@ -217,11 +218,11 @@ public class Solver {
         				.filter(c -> !c.equals(unsolvedCell))
         				.map(c -> c.getPossibleValues())
         				.flatMap(listStream -> listStream.stream())
-        				.collect(Collectors.toList());
+        				.collect(Collectors.toCollection(ArrayList::new));
             
                 List<Integer> unique = unsolvedCell.getPossibleValues().stream()
             		.filter(x -> !otherCellsPossValues.contains(x))
-            		.collect(Collectors.toList());
+            		.collect(Collectors.toCollection(ArrayList::new));
             
             if (unique.size() == 1) {
                 this.setValueForCell(unsolvedCell,
