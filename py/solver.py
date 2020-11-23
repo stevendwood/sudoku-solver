@@ -36,20 +36,20 @@ class Solver(object):
         self.find_unique_values_in_units()
         if not self.grid.is_solved():
             # this is a more tricky puzzle, so start searching for a solution.
-            self._search();
+            self._search()
 
     def _search(self):      
         cell = min(self.grid.unsolved(), key=lambda c: len(c.possible_values)* 100 + (c.row + c.col))
         num_possibilities = len(cell.possible_values)
         for idx, value in enumerate(cell.possible_values):
             num_solved = len(self._solved_cells)
-            self.guesses += 1;
+            self.guesses += 1
             try:
                 self.set_value_for_cell(cell, value)
                 if not self.grid.is_solved():
                     # no luck, keep looking...
                     self._search()
-            except ValueError as inconsistency:
+            except ValueError:
                 # we've ended up in a position where we
                 # can't progress, so before we try another value, undo all the values
                 # we set since the last guess.
