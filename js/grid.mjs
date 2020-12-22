@@ -1,6 +1,6 @@
-const Cell = require("./cell");
+import Cell from './cell.mjs';
 
-class Grid {
+export default class Grid {
     constructor(input) {
         let currentRow;
         this.rows = [];
@@ -128,13 +128,13 @@ class Grid {
 
 	unsolved() {
 		return this.rows
-                .flatten()
+                .flat()
                 .filter(c => c.value === 0);
 	}
 
 	isSolved() {
         return !(this.rows
-                .flatten()
+                .flat()
                 .some(x => x.value === 0));
 	}
 
@@ -159,7 +159,7 @@ class Grid {
             cell.peers = Array.from(new Set(
                     this.sameColAs(cell)
         		        .concat(this.sameRowAs(cell))
-        		        .concat(this.sameSubGridAs(cell).flatten())
+        		        .concat(this.sameSubGridAs(cell).flat())
         		        .filter(x => x !== cell)
                 )
             );
@@ -168,5 +168,3 @@ class Grid {
         return cell.peers;
     }
 }
-
-module.exports = Grid;

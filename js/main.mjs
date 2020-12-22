@@ -1,15 +1,10 @@
-const fs = require('fs');
-const util = require('util')
-const Grid = require("./grid");
-const Solver = require("./solver");
-
-const readFile = util.promisify(fs.readFile);
-
-Array.prototype.flatten = function() { return [].concat.apply([], this); };
+import fs from 'fs/promises';
+import Grid from './grid.mjs';
+import Solver from "./solver.mjs";
 
 (async () => {
     try {
-        const data = await readFile("puzzles.txt", "utf-8");
+        const data = await fs.readFile("puzzles.txt", "utf-8");
         let puzzles = data.split("\n"),
             totalTime = 0,
             puzzleCount = 0,

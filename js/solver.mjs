@@ -8,7 +8,7 @@ const valueOfCell = cell => cell.value,
 // filter unsolved cells out of a list cells.
 const isUnsolved = cell => cell.value === 0;
 
-class Solver {
+export default class Solver {
     constructor(grid) {
         this.grid = grid;
         this.guesses = 0;
@@ -168,12 +168,12 @@ class Solver {
     _findUniqueValuesInUnits(cell) {
         if (cell) {
             [
-                this.grid.sameSubGridAs(cell).flatten(),
+                this.grid.sameSubGridAs(cell).flat(),
                 this.grid.sameColAs(cell),
                 this.grid.sameRowAs(cell)
             ].forEach(this._findUniquePossibiltyInUnit, this);
         } else {
-            let subGrids = this.grid.subgrids().map(sg => sg.flatten());
+            let subGrids = this.grid.subgrids().map(sg => sg.flat());
 
             for (let units of [subGrids, this.grid.columns(), this.grid.rows]) {
                 for (let unit of units) {
@@ -190,7 +190,7 @@ class Solver {
                 otherCellsPossValues = unit
                     .filter(c => c !== unsolvedCell && isUnsolved(c))
                     .map(possibleValuesOfCell)
-                    .flatten();
+                    .flat();
             //.reduce((a, b) => a.concat(b));
 
             unique = unsolvedCell.possibleValues.filter(
@@ -202,5 +202,3 @@ class Solver {
         });
     }
 }
-
-module.exports = Solver;

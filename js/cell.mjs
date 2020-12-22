@@ -5,7 +5,7 @@
 
 */
 
-class Cell {
+export default class Cell {
 
 	constructor(row, col, value) {
 		this.value = value || 0;
@@ -24,5 +24,3 @@ class Cell {
 		return this.value || ".";
 	}
 }
-
-module.exports = Cell;
