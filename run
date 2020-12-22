@@ -14,4 +14,4 @@ javac java/src/main/java/org/woody/sudoku/*.java
 echo "Java"
 time  java -classpath java/src/main/java org.woody.sudoku.Main > logs/java.log
 echo "JavaScript"
-time  node js/main.js > logs/js.log
+time  node js/main.mjs > logs/js.log
