@@ -56,9 +56,9 @@ public class Main {
 	}
 	
 	static class SolveResult {
-		int guesses = 0;
-		long time = 0;
-		Grid solvedGrid;
+		final int guesses;
+		final long time;
+		final Grid solvedGrid;
 		
 		public SolveResult(Grid solvedGrid, long time, int gueses) {
 			this.guesses = gueses;
