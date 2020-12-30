@@ -1,7 +1,6 @@
 package org.woody.sudoku;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -11,10 +10,9 @@ import java.util.Optional;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader buf = null;
-		try {
+		 
+		try (BufferedReader buf = new BufferedReader(new FileReader("puzzles.txt"))) {
 			
-			buf = new BufferedReader(new FileReader("puzzles.txt"));
 			/* 
 			 * All right so this is a bit over the top, but I'm doing this
 			 * to learn about streams and map/reduce/collect and all that.
@@ -27,7 +25,7 @@ public class Main {
 				   .map(Main::solve)
 				   .collect(Collectors.toList());
 			
-			results.forEach((result) -> {
+			results.forEach(result -> {
 				System.out.println(result.solvedGrid);
 				System.out.println("Solved in "+result.time+"ms. with "+result.guesses+" guesses.");
 				System.out.println();
@@ -42,12 +40,10 @@ public class Main {
 					.map(x -> x.guesses)
 					.reduce((x, y) -> x + y);
 			
-			System.out.println("Solved "+results.size()+" in avg "+Math.round(totalTime.get() / results.size())+" ms. Total time: "+totalTime.get()+"ms");
+			System.out.println("Solved "+results.size()+" in avg "+(totalTime.get() / (float) results.size())+" ms. Total time: "+totalTime.get()+"ms");
 			System.out.println("Had to make "+totalGuesses.get()+ " guesses");
 			
-		} finally {
-			buf.close();
-		}
+		} 
 		
 	}
 	
@@ -70,6 +66,4 @@ public class Main {
 			this.solvedGrid = solvedGrid;
 		}
 	}
-	
-	
 }

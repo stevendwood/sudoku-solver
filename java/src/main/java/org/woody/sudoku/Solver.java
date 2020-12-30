@@ -37,8 +37,8 @@ public class Solver {
     
     private void search() {
         Cell cell = Collections.min(this.grid.unsolved(), (x, y) -> {
-            int xVal = x.getPossibleValues().size() * 100 + (x.getRow() + x.getCol()),
-            	yVal = y.getPossibleValues().size() * 100 + (y.getRow() + y.getCol());
+            int xVal = x.getPossibleValues().size() * 100 + (x.getRow() + x.getCol());
+            int	yVal = y.getPossibleValues().size() * 100 + (y.getRow() + y.getCol());
             
             return xVal - yVal;
         });
@@ -66,7 +66,7 @@ public class Solver {
                     resetPossibilities.addAll(this.grid.peers(c));
                 });
                 removals.clear();
-               // this.solvedCells = new ArrayList<Cell>(this.solvedCells.subList(0, numSolved));
+               
                 this.initPossibleValues(resetPossibilities.stream()
                 		.filter(x -> x.getValue() == 0)
                 		.collect(Collectors.toSet()));
@@ -83,7 +83,7 @@ public class Solver {
     }
     
     private void initPossibleValues() {
-        this.initPossibleValues(new HashSet<Cell>(this.grid.unsolved()));
+        this.initPossibleValues(new HashSet<>(this.grid.unsolved()));
     }
     
     private void initPossibleValues(Set<Cell> cells) {
@@ -116,7 +116,7 @@ public class Solver {
         cells.forEach(cell -> {
             List<Integer> peerValues = this.grid.peers(cell).stream()
             		.filter(peerCell -> peerCell.getValue() != 0)
-            		.map(peerCell -> peerCell.getValue())
+            		.map(Cell::getValue)
             		.collect(Collectors.toCollection(ArrayList::new));
             
             List<Integer> possibleValues = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -138,9 +138,9 @@ public class Solver {
 	            List<Integer> possibleValues = p.getPossibleValues();
 	            // .remove(int) will remove at that index, need to
 	            // make sure remove(Object) is called.
-	            possibleValues.remove(new Integer(cell.getValue()));
+	            possibleValues.remove(Integer.valueOf(cell.getValue()));
 	            
-	            if (possibleValues.size() == 0) {
+	            if (possibleValues.isEmpty()) {
 	                throw new DeadEnd("No possible values for cell ["
 	                + p.getRow() + ", " + p.getCol() + "] "
 	                + p.getValue());
@@ -190,7 +190,7 @@ public class Solver {
         // [Cell, Cell, Cell, Cell....]
         //
         return subgrid.stream()
-        		.flatMap(s -> s.stream())
+        		.flatMap(List::stream)
         		.collect(Collectors.toCollection(ArrayList::new));
     }
     
@@ -204,9 +204,7 @@ public class Solver {
         } else {
         	Arrays.asList(this.grid.columns(), this.grid.rows())
         		  .forEach(units -> units.forEach(this::findUniquePossibiltyInUnit));
-        	this.grid.subgrids().forEach(sg -> {
-        		this.findUniquePossibiltyInUnit(this.flattenSubGrid(sg));
-        	});
+        	this.grid.subgrids().forEach(sg -> this.findUniquePossibiltyInUnit(this.flattenSubGrid(sg)));
         }
     }
     
@@ -216,8 +214,8 @@ public class Solver {
         	.forEach(unsolvedCell -> {
         		List<Integer> otherCellsPossValues = unit.stream()
         				.filter(c -> !c.equals(unsolvedCell))
-        				.map(c -> c.getPossibleValues())
-        				.flatMap(listStream -> listStream.stream())
+        				.map(Cell::getPossibleValues)
+        				.flatMap(List::stream)
         				.collect(Collectors.toCollection(ArrayList::new));
             
                 List<Integer> unique = unsolvedCell.getPossibleValues().stream()
@@ -238,6 +236,8 @@ public class Solver {
     /* Unchecked exception so it can be thrown from lambda */
     public static class DeadEnd extends RuntimeException {
         
+        private static final long serialVersionUID = 1L;
+
         public DeadEnd(String message) {
             super(message);
         }

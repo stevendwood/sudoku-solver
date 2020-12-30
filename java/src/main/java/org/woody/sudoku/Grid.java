@@ -25,11 +25,11 @@ public class Grid {
     private List<List<List<Cell>>> grids = null;
 
     public Grid(String inputStr) {
-        this.rows = new ArrayList<List<Cell>>(9);
+        this.rows = new ArrayList<>(9);
         ArrayList<Cell> currentRow = null;
         for (int idx = 0, l = inputStr.length(); idx < l; idx++) {
             if (idx % 9 == 0) {
-                currentRow = new ArrayList<Cell>(9);
+                currentRow = new ArrayList<>(9);
                 this.rows.add(currentRow);
             }
 
@@ -44,15 +44,15 @@ public class Grid {
 
     public List<List<Cell>> columns() {
         if (this.columns == null) {
-            this.columns = new ArrayList<List<Cell>>(9);
+            this.columns = new ArrayList<>(9);
             for (int i = 0; i < 9; i++) {
-                this.columns.add(new ArrayList<Cell>(9));
+                this.columns.add(new ArrayList<>(9));
             }
-            this.rows.forEach(row -> {
-                IntStream.range(0, row.size()).forEach(idx -> {
-                    this.columns.get(idx).add(row.get(idx));
-                });
-            });
+            this.rows.forEach(row -> 
+                IntStream.range(0, row.size()).forEach(idx -> 
+                    this.columns.get(idx).add(row.get(idx))
+                )
+            );
         }
 
         return this.columns;
@@ -74,11 +74,11 @@ public class Grid {
         /*
         * Get all the cells in this Grid that are unsolved
         */
-        List<Cell> unsolved = new ArrayList<Cell>();
-        this.rows.forEach(row -> {
+        List<Cell> unsolved = new ArrayList<>();
+        this.rows.forEach(row -> 
             unsolved.addAll(row.stream().filter(cell -> cell.getValue() == 0)
-            .collect(Collectors.toList()));
-        });
+            .collect(Collectors.toList()))
+        );
 
         return unsolved;
     }
@@ -112,12 +112,13 @@ public class Grid {
         // same as above
         if (cell.getSubgrid() == null) {
 
-            int startRow = subgridIndex(cell.getRow()), startCol = subgridIndex(cell
-            .getCol());
-            List<List<Cell>> subgrid = new ArrayList<List<Cell>>(3);
+            int startRow = subgridIndex(cell.getRow());
+            int startCol = subgridIndex(cell.getCol());
+
+            List<List<Cell>> subgrid = new ArrayList<>(3);
             for (int i = startRow; i < startRow + 3; i++) {
                 List<Cell> row = this.rows.get(i);
-                List<Cell> subGridRow = new ArrayList<Cell>(3);
+                List<Cell> subGridRow = new ArrayList<>(3);
                 for (int j = startCol; j < startCol + 3; j++) {
                     subGridRow.add(row.get(j));
                 }
@@ -132,25 +133,25 @@ public class Grid {
 
     @Override
     public String toString() {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < this.rows.size(); i++) {
             if (i != 0 && i % 3 == 0) {
-                output += "---------+---------+---------\n";
+                output.append("---------+---------+---------\n");
             }
 
             List<Cell> currentRow = this.rows.get(i);
             for (int j = 0; j < currentRow.size(); j++) {
                 if (j != 0 && j % 3 == 0) {
-                    output += "|";
+                    output.append("|");
                 }
 
-                output += " " + currentRow.get(j).toString() + " ";
+                output.append(" " + currentRow.get(j).toString() + " ");
             }
 
-            output += "\n";
+            output.append("\n");
         }
 
-        return output;
+        return output.toString();
     }
 
     public List<Cell> peers(Cell cell) {
@@ -172,7 +173,7 @@ public class Grid {
 
         */
         if (cell.getPeers() == null) {
-            List<Cell> peers = new ArrayList<Cell>();
+            List<Cell> peers = new ArrayList<>();
 
             peers.addAll(this.sameColAs(cell));
             peers.addAll(this.sameRowAs(cell));
@@ -180,7 +181,7 @@ public class Grid {
 
             ArrayList<Cell> peersList = new ArrayList<>();
             peersList
-              .addAll(new HashSet<Cell>(peers.stream()
+              .addAll(new HashSet<>(peers.stream()
               .filter(x -> !x.equals(cell))
               .collect(Collectors.toList())));
             cell.setPeers(peersList);
@@ -202,7 +203,7 @@ public class Grid {
 
     public List<List<List<Cell>>> subgrids() {
         if (this.grids == null) {
-            this.grids = new ArrayList<List<List<Cell>>>(9);
+            this.grids = new ArrayList<>(9);
             for (int i = 0; i < 9; i += 3) {
                 for (int j = 0; j < 9; j += 3) {
                     this.grids.add(this.sameSubGridAs(new Cell(i, j, 0)));
