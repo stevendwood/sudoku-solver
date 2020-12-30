@@ -70,3 +70,4 @@ java/**/*.class
 js/node_modules
 .classpath
 logs
+.vscode/launch.json
