@@ -31,15 +31,16 @@ public class Main {
 			});
 			
 			long totalTime = results.stream()
-						.map(result -> result.time)
-						.reduce((long) 0, (x, y) -> x + y);
+					.map(result -> result.time)
+					.reduce((long) 0, (x, y) -> x + y);
 			
 			int totalGuesses = results
 					.stream()
 					.map(x -> x.guesses)
 					.reduce(0, (x, y) -> x + y);
-				System.out.println("Solved "+results.size()+" in avg "+(totalTime / (float) results.size())+" ms. Total time: "+totalTime+"ms");
-				System.out.println("Had to make "+totalGuesses+ " guesses");
+			
+			System.out.println("Solved "+results.size()+" in avg "+(totalTime / (float) results.size())+" ms. Total time: "+totalTime+"ms");
+			System.out.println("Had to make "+totalGuesses+ " guesses");
 			
 		} 
 		
