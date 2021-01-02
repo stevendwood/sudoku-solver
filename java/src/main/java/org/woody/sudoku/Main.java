@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.List;
-import java.util.Optional;
 
 public class Main {
 
@@ -31,17 +30,16 @@ public class Main {
 				System.out.println();
 			});
 			
-			Optional<Long> totalTime = results.stream()
+			long totalTime = results.stream()
 						.map(result -> result.time)
-						.reduce((x, y) -> x + y);
+						.reduce((long) 0, (x, y) -> x + y);
 			
-			Optional<Integer> totalGuesses = results
+			int totalGuesses = results
 					.stream()
 					.map(x -> x.guesses)
-					.reduce((x, y) -> x + y);
-			
-			System.out.println("Solved "+results.size()+" in avg "+(totalTime.get() / (float) results.size())+" ms. Total time: "+totalTime.get()+"ms");
-			System.out.println("Had to make "+totalGuesses.get()+ " guesses");
+					.reduce(0, (x, y) -> x + y);
+				System.out.println("Solved "+results.size()+" in avg "+(totalTime / (float) results.size())+" ms. Total time: "+totalTime+"ms");
+				System.out.println("Had to make "+totalGuesses+ " guesses");
 			
 		} 
 		
