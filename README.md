@@ -29,3 +29,20 @@ The backtracking bit is done by throwing and catching exceptions which is probab
 
 There are 106 puzzles. ./run runs everything and puts the output into a new sub dir called logs (one log for each language)
 
+To build docker images - run from the top level dir :
+```
+docker build -t woody/sudoku-solver-py -f py/Dockerfile .
+docker build -t woody/sudoku-solver-rb -f rb/Dockerfile .
+docker build -t woody/sudoku-solver-js -f js/Dockerfile .
+```
+For Java build the executable JAR first :
+```
+mvn package
+
+docker build -t woody/sudoku-solver-java -f java/Dockerfile .
+
+docker run woody/sudoku-solver-java
+```
+
+
+
