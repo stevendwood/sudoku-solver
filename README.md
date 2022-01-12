@@ -34,14 +34,7 @@ To build docker images - run from the top level dir :
 docker build -t woody/sudoku-solver-py -f py/Dockerfile .
 docker build -t woody/sudoku-solver-rb -f rb/Dockerfile .
 docker build -t woody/sudoku-solver-js -f js/Dockerfile .
-```
-For Java build the executable JAR first :
-```
-mvn package
-
 docker build -t woody/sudoku-solver-java -f java/Dockerfile .
-
-docker run woody/sudoku-solver-java
 ```
 
 
